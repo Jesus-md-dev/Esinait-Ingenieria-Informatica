@@ -20,7 +20,7 @@ void lobby (usuario **u,configuracion c,int indice,jmapa **jm)
 		system("cls");
 		if(strcmp((*u)[indice].estado,"EJ")==0)
 		{
-			
+			//ADFAGSAFGSDFG
 			printf(" Vida: (*u)[i].\n");
 			printf(" 1.Mover\n");
 			printf(" 2.Mochila\n");
