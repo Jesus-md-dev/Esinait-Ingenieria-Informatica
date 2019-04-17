@@ -15,7 +15,7 @@ int opciones_general();
 
 int main ()
 {
-	//<DADFGSDFGAFDSBGSAFD
+	//<DADFGSDFGAFDSBGSAFDwgeagr
 	menu_principal();
 	system("cls");
 	return 0;
