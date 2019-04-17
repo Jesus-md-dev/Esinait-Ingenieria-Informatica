@@ -156,7 +156,7 @@ int iniciar_sesion(usuario **u,configuracion c)
 			}
 		}while(op == 'n'||res!=0);
 		if(op == 'n') i=-1;
-		if(res == 0)
+		if(res == 0 && strcmp((*u)[i].estado,"OFF")==0)
 		{
 			strcpy((*u)[i].estado,"ON");
 		}

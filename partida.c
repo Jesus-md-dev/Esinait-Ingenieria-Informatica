@@ -11,23 +11,52 @@ void jugadores_espera(usuario *u, configuracion c);
 void iniciar_jugadores_partida(usuario **u,jmapa **jm,configuracion c);
 void terminar_partida_jugadores(usuario **u,jmapa **jm);
 void lista_indices(int *v,int indice);
+void movimiento(jmapa **jm,int indice,configuracion c);
 
-void lobby (usuario **u,configuracion c,int indice,jmapa **jm)
+void lobby (usuario **u,configuracion c,int indice,jmapa **jm,mochila **m)
 {
-	int op,turno;
+	int op,turno=0,idob=-1,acciones=0;
 	do
 	{
 		system("cls");
 		if(strcmp((*u)[indice].estado,"EJ")==0)
 		{
-			//ADFAGSAFGSDFG
-			printf(" Vida: (*u)[i].\n");
-			printf(" 1.Mover\n");
-			printf(" 2.Mochila\n");
-			printf(" 3.Jugadores\n");
-			printf(" 4.Mapa\n");
-			printf(" 0.Salir\n");
-			printf("pene")
+			do
+			{
+				do
+				{
+					printf(" |%s| \t Vida: %d/100 \t Acciones %d/%d\n\n",(*jm)[turno].id,(*u)[indice].vida,c.n_acciones-acciones,c.n_acciones);
+					printf(" 1.Ver/Usar Mochila\n");
+					printf(" 2.Usar Objeto/Disparar\n");
+					printf(" 3.Mover Jugador\n");
+					printf(" 4.Ver Objetos Cercanos\n");
+					printf(" 5.Ver Oponentes Cercanos\n");
+					printf(" 6.Ver Posicion Actual\n");
+					printf(" 7.Finalizar Turno\n");
+					printf(" 0.Volver al menu principal\n");
+					printf("\n\tOpcion: ");
+					scanf("%d",&op);
+				}while(op < 1 && op > 7);
+				switch (op)
+				{
+				case 1: usarMochila(*m,indice,*u);break;
+				case 2: printf("Mantenimiento\n");system("pause");break;
+				case 3: movimiento(&(*jm),turno,c);break;
+				case 4: printf("Mantenimiento\n");system("pause");break;
+				case 5: printf("Mantenimiento\n");system("pause");break;
+				case 6: printf("\n Posicion: (%d,%d)",(*jm)[turno].x,(*jm)[turno].y);
+				case 7: acciones=c.n_acciones;
+				}
+				if(acciones>=c.n_acciones)
+				{
+					idob=-1;
+					acciones=0;
+					turno++;
+					if(turno>=njugando)turno=0;
+				}
+			} while (op != 0);
+			
+			
 		}
 		else if(strcmp((*u)[indice].estado,"GO")==0)
 		{
@@ -134,6 +163,8 @@ void iniciar_jugadores_partida(usuario **u,jmapa **jm,configuracion c)
 			(*jm)=(jmapa*)realloc((*jm),njugando*sizeof(jmapa));
 			vindice = rand() % n;
 			strcpy((*jm)[njugando-1].id,(*u)[v[vindice]].nick);
+			(*jm)[njugando-1].x = 0;
+			(*jm)[njugando-1].y = 0;
 			v[vindice] = v[n-1];
 			n--;
 			v = (int*) realloc (v,n*sizeof(int));	
@@ -174,6 +205,26 @@ int njugadores_EE (usuario *u)
 	return n;
 }
 
+void movimiento(jmapa **jm,int indice,configuracion c)
+{
+	int op;
+	do
+	{
+		printf("|MOVIMIENTOS|");
+		printf(" 1.Arriba\n");
+		printf(" 2.Abajo\n");
+		printf(" 3.Izquierda\n");
+		printf(" 4.Derecha\n");
+		scanf("%d",&op);
+	} while (op < 1 && op > 4);
+	switch (op)
+	{
+	case 1: (*jm)[indice].x += c.dist_paso;break;
+	case 2: (*jm)[indice].x -= c.dist_paso;break;
+	case 3: (*jm)[indice].y -= c.dist_paso;break;
+	case 4: (*jm)[indice].y += c.dist_paso;break;
+	}
+}
 
 
 

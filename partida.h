@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "usuario.h"
+#include "Mochila.h"
 
 typedef struct 
 {
@@ -21,7 +22,7 @@ typedef struct
 }objeto;
 
 
-void lobby (usuario **u,configuracion c,int indice,jmapa **jm);
+void lobby (usuario **u,configuracion c,int indice,jmapa **jm,mochila **m);
 
 int njugadores_EE (usuario *u);
 

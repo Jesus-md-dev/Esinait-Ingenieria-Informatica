@@ -70,7 +70,7 @@ void menu_principal()
 		switch(op)
 		{
 			case 1: i=iniciar_sesion(&u,c);break;
-			case 2: lobby(&u,c,i,&jm);break;
+			case 2: lobby(&u,c,i,&jm,&m);break;
 			case 3: comprarobjeto(u,o,&m,i);break;
 			case 4: ver_perfil(u,i);break;
 			case 5: m_amigos(&a,u[i].nick,u);break;

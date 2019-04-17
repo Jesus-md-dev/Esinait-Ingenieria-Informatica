@@ -11,7 +11,6 @@ void cargarficheroMochila (mochila **eMochila)
     char linea [100];
     char *token;
     nmochilas=0;
-    printf("1\n");
     //*eMochila=NULL;
 
     f=fopen("Mochilas.txt","r+");
@@ -21,10 +20,8 @@ void cargarficheroMochila (mochila **eMochila)
     } 
     else
     {
-        system("pause");
         while (fgets (linea,100,f))
         {
-            system("pause");
             if(strcmp(linea,"\0"))
             {
                 *eMochila=(mochila*)realloc(*eMochila,(nmochilas+1)*sizeof(mochila)); //a�ade una estructura de tipo mochila
