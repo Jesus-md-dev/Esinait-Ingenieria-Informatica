@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 void comprarobjeto(usuario *u,objeto *o,mochila **m,int indice);
-/////////////////////////////
+/////////////////////////
 void menu_principal();
 int opciones_jugador(usuario *u,int i);
 int opciones_admin(usuario *u,int i);
