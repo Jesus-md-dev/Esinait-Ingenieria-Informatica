@@ -19,11 +19,12 @@ int main ()
 	menu_principal();
 	system("cls");
 	return 0;
+
 }
 
 void menu_principal()
 {
-	int op,i,opc;
+	int op, i, opc;
 	i=-1;
 	usuario *u;
 	configuracion c;
