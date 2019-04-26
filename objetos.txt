@@ -1,0 +1,3 @@
+PTL01/pistola/arma/10/20/10
+FUS01/fusil/arma/30/35/15
+ESC01/escopeta/arma/1000/7/70

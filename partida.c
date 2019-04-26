@@ -6,6 +6,8 @@ int njugadores_EE (usuario *u);
 void lobby (usuario **u,configuracion c,int indice);
 */
 int op_usuario_partida(usuario *u,configuracion c);
+int njugadores_EJ (usuario *u);
+int njugadores_EE (usuario *u);
 int op_admin_partida(usuario *u,configuracion c);
 void jugadores_espera(usuario *u, configuracion c);
 void iniciar_jugadores_partida(usuario **u,jmapa **jm,configuracion c);
@@ -25,7 +27,7 @@ void lobby (usuario **u,configuracion c,int indice,jmapa **jm,mochila **m)
 			{
 				do
 				{
-					printf(" |%s| \t Vida: %d/100 \t Acciones %d/%d\n\n",(*jm)[turno].id,(*u)[indice].vida,c.n_acciones-acciones,c.n_acciones);
+					printf(" |%s|  Vida: %d/100  Acciones %d/%d\n\n",(*jm)[turno].id,(*u)[indice].vida,c.n_acciones-acciones,c.n_acciones);
 					printf(" 1.Ver/Usar Mochila\n");
 					printf(" 2.Usar Objeto/Disparar\n");
 					printf(" 3.Mover Jugador\n");
@@ -36,27 +38,29 @@ void lobby (usuario **u,configuracion c,int indice,jmapa **jm,mochila **m)
 					printf(" 0.Volver al menu principal\n");
 					printf("\n\tOpcion: ");
 					scanf("%d",&op);
-				}while(op < 1 && op > 7);
+				}while(op < 0 && op > 7);
 				switch (op)
 				{
 				case 1: usarMochila(*m,indice,*u);break;
 				case 2: printf("Mantenimiento\n");system("pause");break;
-				case 3: movimiento(&(*jm),turno,c);break;
+				case 3: movimiento(&(*jm),turno,c);acciones++;break;
 				case 4: printf("Mantenimiento\n");system("pause");break;
 				case 5: printf("Mantenimiento\n");system("pause");break;
-				case 6: printf("\n Posicion: (%d,%d)",(*jm)[turno].x,(*jm)[turno].y);
-				case 7: acciones=c.n_acciones;
+				case 6: printf("\n Posicion: (%d,%d)\n",(*jm)[turno].x,(*jm)[turno].y);break;
+				case 7: acciones=c.n_acciones;break;
 				}
+
 				if(acciones>=c.n_acciones)
 				{
-					idob=-1;
-					acciones=0;
+					idob = -1;
+					acciones = 0;
 					turno++;
-					if(turno>=njugando)turno=0;
+					if(turno > njugando)turno = 0;
 				}
+				njugando=njugadores_EJ(*u)-1;
+				
+				if(njugando==1) terminar_partida_jugadores(&(*u),&(*jm));
 			} while (op != 0);
-			
-			
 		}
 		else if(strcmp((*u)[indice].estado,"GO")==0)
 		{
@@ -135,12 +139,12 @@ void jugadores_espera(usuario *u, configuracion c)
 			n++;
 		}
 	}
-	printf("\n(%d/%d) Jugadores (Minimo) unidos a la partida\n",njugadores_EE(u),c.min_jugadores);
+	printf("\n (%d/%d) Jugadores (Minimo) unidos a la partida\n\n",njugadores_EE(u),c.min_jugadores);
 }
 
 void iniciar_jugadores_partida(usuario **u,jmapa **jm,configuracion c)
 {
-	if(njugadores_EE(*u) > c.min_jugadores){
+	if(njugadores_EE(*u) >= c.min_jugadores){
 		srand (time(NULL));
 		int i,aux,vindice,n=0;
 		int *v;
@@ -170,7 +174,6 @@ void iniciar_jugadores_partida(usuario **u,jmapa **jm,configuracion c)
 			v = (int*) realloc (v,n*sizeof(int));	
 		}while(n>0);
 
-	////////////////////////
 		for(int i=0;i<njugando;i++)
 		{
 			printf("%i %s\n",i,(*jm)[i].id);
@@ -181,12 +184,15 @@ void iniciar_jugadores_partida(usuario **u,jmapa **jm,configuracion c)
 		printf(" Minimo de jugadores no superado\n");
 		system("pause");
 	}
-
 }
 
 void terminar_partida_jugadores(usuario **u,jmapa **jm)
 {
 	int i;
+	for(i=0;i<nusuarios;i++)
+	{
+		if(strcmp((*u)[i].estado,"EJ")==0) printf(" %s, has ganado");
+	}
 	for (i=0;i<nusuarios;i++)
 	{
 		if(strcmp((*u)[i].estado,"EJ")==0||strcmp((*u)[i].estado,"GO")==0) strcpy((*u)[i].estado,"ON");
@@ -200,7 +206,18 @@ int njugadores_EE (usuario *u)
 	int n=0;
 	for (i=0;i<nusuarios;i++)
 	{
-		if(strcmp(u[i].estado,"EE")==0)n++;
+		if(strcmp(u[i].estado,"EE")==0) n++;
+	}
+	return n;
+}
+
+int njugadores_EJ (usuario *u)
+{
+	int i;
+	int n=0;
+	for (i=0;i<nusuarios;i++)
+	{
+		if(strcmp(u[i].estado,"EJ")==0) n++;
 	}
 	return n;
 }
@@ -210,7 +227,7 @@ void movimiento(jmapa **jm,int indice,configuracion c)
 	int op;
 	do
 	{
-		printf("|MOVIMIENTOS|");
+		printf("|MOVIMIENTOS|\n");
 		printf(" 1.Arriba\n");
 		printf(" 2.Abajo\n");
 		printf(" 3.Izquierda\n");
@@ -225,8 +242,6 @@ void movimiento(jmapa **jm,int indice,configuracion c)
 	case 4: (*jm)[indice].y += c.dist_paso;break;
 	}
 }
-
-
 
 /////////////////////////////////////
 void lista_indices(int *v,int indice)

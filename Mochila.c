@@ -11,13 +11,12 @@ void cargarficheroMochila (mochila **eMochila)
     char linea [100];
     char *token;
     nmochilas=0;
-    //*eMochila=NULL;
 
     f=fopen("Mochilas.txt","r+");
     if (f==NULL)
     {
         printf ("El fichero Mochila.txt no ha podido abrirse.\n");
-    } 
+    }
     else
     {
         while (fgets (linea,100,f))
@@ -92,7 +91,7 @@ void leerMochila (mochila *eMochila, int j, usuario *u) //j es el usuario
 
 //Cabecera: int  usarMochila (mochila *eMochila, int j, usuario *u)
 //Precondicion: que haya algun objeto en la mochila
-//Poscondicion: devuelve una i que es la posicion del objeto elegido para así en partida saber el daño o beneficio de ese objeto
+//Poscondicion: devuelve la posicion del objeto elegido para así en partida saber el daño o beneficio de ese objeto
 int  usarMochila (mochila *eMochila, int j, usuario *u) //j es el usuario
 {
   int i,cont,posicion;
@@ -125,7 +124,7 @@ int  usarMochila (mochila *eMochila, int j, usuario *u) //j es el usuario
                 cont++;
             }
         }
-        if (cont==0) //el objeto no est� en la mochila
+        if (cont==0) //el objeto no esta en la mochila
         {
             printf ("La ID introducida no es correcta. Introduzca otra: \n");
         } else
@@ -152,7 +151,7 @@ int  usarMochila (mochila *eMochila, int j, usuario *u) //j es el usuario
 
 //Cabecera: void eliminarobjeto (mochila **eMochila, int i)
 //Precondicion: saber la i (posicion) del objeto
-//Poscondicion: resta una unidad de objeto o una estructura del objeto despu�s de ser utilizado
+//Poscondicion: resta una unidad de objeto o una estructura del objeto despues de ser utilizado
 
 void eliminarobjeto (mochila **eMochila, int i) //i es la posicion del objeto a eliminar
 {
@@ -177,9 +176,9 @@ void eliminarobjeto (mochila **eMochila, int i) //i es la posicion del objeto a 
 
 //Cabecera: void guardar_mochila (mochila **eMochila, char *objeto, int j, usuario *u)
 //Precondicion: haber comprado un objeto o haberlo cogido en el mapa
-//Poscondicion: a�adir o intercambiar el objeto en la mochila de un usuario
+//Poscondicion: añadir o intercambiar el objeto en la mochila de un usuario
 
-void guardar_mochila (mochila **eMochila, char *objeto, int j, usuario *u) //j es una variable que va a decir que usuario es el que inicia sesion
+void guardar_mochila (mochila **eMochila, char *objeto, int j, usuario *u, configuracion c) //j es una variable que va a decir que usuario es el que inicia sesion
 {
     int i,cont,cont1,cont2;
     char op;
@@ -196,7 +195,7 @@ void guardar_mochila (mochila **eMochila, char *objeto, int j, usuario *u) //j e
             }
         }
 
-        if (cont==8)
+        if (cont==c.tam_mochila)
         {
         printf ("La mochila esta llena. Desea reemplazar el objeto por otro? s/n\n"); //porque el maximo de objetos diferetes es 7
         leerMochila(*eMochila,j,u);
@@ -212,10 +211,12 @@ void guardar_mochila (mochila **eMochila, char *objeto, int j, usuario *u) //j e
                 fgets(objetoelegido,6,stdin);
                 fixstring(objetoelegido);
 
-                for (i=0;i<nmochilas;i++)
+                for (i=0;i<nmochilas && cont1==0;i++)
                 {
                 if (strcmp((*eMochila)[i].idusu,u[j].nick)==0) //usuario actual
-                {
+               {
+                    for (i=0;i<nmochilas;i++)
+                    {
                         if (strcmp((*eMochila)[i].idobj,objetoelegido)==0) //para saber en que posicion esta el objeto que se reemplaza
                         {
                             strcpy((*eMochila)[i].idobj,objeto); //el objeto nuevo reemplaza el que ya estaba
@@ -223,6 +224,7 @@ void guardar_mochila (mochila **eMochila, char *objeto, int j, usuario *u) //j e
                             cont1++;
                         }
                     }
+                }
                 }
                 if (cont1==0)
                 {
@@ -244,7 +246,7 @@ void guardar_mochila (mochila **eMochila, char *objeto, int j, usuario *u) //j e
             printf ("El objeto se ha agregado correctamente.\n");
 
 
-        } else //Menos de 7 y m�s de 0
+        } else //Menos de 7 y mas de 0, y algun objeto de ese tipo
         {
             for (i=0;i<nmochilas;i++)
             {
