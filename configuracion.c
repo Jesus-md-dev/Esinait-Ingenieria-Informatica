@@ -71,7 +71,6 @@ void mostrar_configuracion(configuracion *c)
 		do{
 			system("cls");
 			printf(" |CONFIGURACION|\n");
-			printf(" |RAD.MAPA|DIST.RCG|DIST.FSC|DIN.BSE|MIN.JGD|DIST.PASO|TAM.MCH|PRT.NIVEL|N.ACCN|\n");
 			printf(" 1.Radio Mapa: %d\n",(*c).radio_mapa);
 			printf(" 2.Distancia Recoger: %d\n",(*c).dist_recoger);
 			printf(" 3.Distancia A.Fisico: %d\n",(*c).dist_fisico);

@@ -22,6 +22,6 @@ void guardarficheroMochila (mochila *eMochila);
 void leerMochila (mochila *eMochila, int j, usuario *u);
 int usarMochila (mochila *eMochila, int j, usuario *u);
 void eliminarobjeto (mochila **eMochila, int i);
-void guardar_mochila (mochila **eMochila, char *objeto, int j, usuario *u);
+void guardar_mochila (mochila **eMochila, char *objeto, int j, usuario *u,configuracion c);
 
 #endif

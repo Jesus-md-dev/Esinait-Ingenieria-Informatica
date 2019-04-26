@@ -74,7 +74,7 @@ void menu_principal()
 		{
 			case 1: i=iniciar_sesion(&u,c);break;
 			case 2: lobby(&u,c,i,&jm,&m);break;
-			case 3: comprar_objetos(&m,o,&u,i);system("pause");break;
+			case 3: comprar_objetos(&m,o,&u,i,c);system("pause");break;
 			case 4: ver_perfil(u,i);break;
 			case 5: m_amigos(&a,u[i].nick,u);break;
 			case 6: lista_usuarios(u);system("pause");break;
@@ -152,12 +152,6 @@ int opciones_general()
 	return op;
 }
 ////////////////////////
-
-void comprarobjeto(usuario *u,objeto *o,mochila **m,int indice)
-{
-	guardar_mochila(&(*m),"pstl",indice,u);
-	leerMochila((*m),indice,u);
-}
 
 void logoutall(usuario **u)
 {

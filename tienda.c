@@ -72,7 +72,7 @@ void lista_objetos(objetos *obj){
 
 }
 
-void comprar_objetos(mochila **moch,objetos *obj,usuario **usua,int iuser){
+void comprar_objetos(mochila **moch,objetos *obj,usuario **usua,int iuser,configuracion c){
 
     char compra[25];
     int a=0,j;
@@ -90,7 +90,7 @@ void comprar_objetos(mochila **moch,objetos *obj,usuario **usua,int iuser){
             a=1;
 
             if((*usua)[iuser].dinero >= obj[j].coste){
-                guardar_mochila(&(*moch),obj[j].item_ID,iuser,*usua);
+                guardar_mochila(&(*moch),obj[j].item_ID,iuser,*usua,c);
                 printf("Compra realizada con exito.\n");
                 (*usua)[iuser].dinero = (*usua)[iuser].dinero - obj[j].coste;
                 printf("Ahora su dinero es %d.\n ",(*usua)[iuser].dinero);

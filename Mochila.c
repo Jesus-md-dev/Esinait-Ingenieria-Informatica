@@ -65,12 +65,9 @@ void guardarficheroMochila (mochila *eMochila)
                 fprintf (fich,"%s/%s/%d\n",eMochila[i].idusu,eMochila[i].idobj,eMochila[i].unidades);     // impr en el fichero linea por linea
                 i++;
             }
-
             printf ("Se han guardado los datos correctamente.\n");
         }
-
         fclose(fich);
-
     }
 
 //Cabecera: void leerMochila (mochila *eMochila, int j, usuario *u)

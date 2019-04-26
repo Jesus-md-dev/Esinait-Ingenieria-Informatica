@@ -12,7 +12,7 @@ typedef struct{
     char tipo[20];
     int coste;
     int alcance;
-    int porcentaje_d_e;             //porcentaje daño o escudo
+    int porcentaje_d_e;             //porcentaje daï¿½o o escudo
 
 }objetos;
 
@@ -20,7 +20,7 @@ int nobjetos;
 
 void cargar_objetos(objetos **obj);
 void lista_objetos(objetos *obj);
-void comprar_objetos(mochila **moch,objetos *obj,usuario **usua,int iuser);
+void comprar_objetos(mochila **moch,objetos *obj,usuario **usua,int iuser,configuracion c);
 void registrar_objetos(objetos **obj);
 void borrar_objetos(objetos **obj);
 void modificar_objetos(objetos **obj);
