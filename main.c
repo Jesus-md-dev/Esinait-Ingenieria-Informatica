@@ -2,12 +2,12 @@
 #include "configuracion.h"
 #include "partida.h"
 #include "Mochila.h"
-#include "tienda.c"
+#include "tienda.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-void comprarobjeto(usuario *u,objeto *o,mochila **m,int indice);
+void comprarobjeto(usuario *u,objetos *o,mochila **m,int indice);
 void menu_principal();
 int opciones_jugador(usuario *u,int i);
 int opciones_admin(usuario *u,int i);
@@ -32,7 +32,7 @@ void menu_principal()
 	jmapa *jm;
 	mochila *m;
 	objetos *o;
-	o = (objetos*)malloc(0*sizeof(objeto));
+	o = (objetos*)malloc(0*sizeof(objetos));
 	m = (mochila*)malloc(0*sizeof(mochila));
 	u = (usuario*)malloc(0*sizeof(usuario));
 	a = (amigo*)malloc(0*sizeof(amigo));
@@ -43,6 +43,7 @@ void menu_principal()
 	cargar_configuracion(&c);
 	cargar_amigos(&a);
 	cargarficheroMochila (&m);
+	
 	do
 	{
 		opc=-1;
@@ -73,7 +74,7 @@ void menu_principal()
 		switch(op)
 		{
 			case 1: i=iniciar_sesion(&u,c);break;
-			case 2: lobby(&u,c,i,&jm,&m);break;
+			case 2: lobby(&u,c,&i,&jm,&m,o);break;
 			case 3: comprar_objetos(&m,o,&u,i,c);system("pause");break;
 			case 4: ver_perfil(u,i);break;
 			case 5: m_amigos(&a,u[i].nick,u);break;

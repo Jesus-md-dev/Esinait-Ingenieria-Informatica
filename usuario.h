@@ -50,4 +50,6 @@ int iniciar_sesion(usuario **u,configuracion c);
 
 void m_amigos(amigo **a,char *nick,usuario *u);
 
+int indice_usuario(usuario *u,char id[100]);
+
 #endif

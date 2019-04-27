@@ -1,9 +1,13 @@
+#ifndef _TIENDA_H_
+#define _TIENDA_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "usuario.h"
 #include "mochila.h"
 #include "configuracion.h"
+
 
 typedef struct{
 
@@ -12,11 +16,9 @@ typedef struct{
     char tipo[20];
     int coste;
     int alcance;
-    int porcentaje_d_e;             //porcentaje da�o o escudo
+    int porcentaje_d_e;             //porcentaje danio o escudo
 
 }objetos;
-
-int nobjetos;
 
 void cargar_objetos(objetos **obj);
 void lista_objetos(objetos *obj);
@@ -25,3 +27,7 @@ void registrar_objetos(objetos **obj);
 void borrar_objetos(objetos **obj);
 void modificar_objetos(objetos **obj);
 void guardar_objetos(objetos *obj);
+
+int nobjetos;
+
+#endif

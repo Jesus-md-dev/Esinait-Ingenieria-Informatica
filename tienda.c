@@ -47,6 +47,7 @@ void cargar_objetos(objetos **obj){
 
 	fclose(f);
     system("pause");
+
 }
 
 
@@ -90,12 +91,16 @@ void comprar_objetos(mochila **moch,objetos *obj,usuario **usua,int iuser,config
             a=1;
 
             if((*usua)[iuser].dinero >= obj[j].coste){
+
                 guardar_mochila(&(*moch),obj[j].item_ID,iuser,*usua,c);
                 printf("Compra realizada con exito.\n");
                 (*usua)[iuser].dinero = (*usua)[iuser].dinero - obj[j].coste;
                 printf("Ahora su dinero es %d.\n ",(*usua)[iuser].dinero);
+
             }
+
             else printf("No tiene suficiente dinero para comprar el objeto");
+
         }
 
     }
@@ -205,7 +210,7 @@ void modificar_objetos(objetos **obj){
 
             do{
 
-                printf("1-Descripcion\n2-Tipo\n3-Coste\n4-Alcance\n5-Porcentaje Da�o-Escudo\n");
+                printf("1-Descripcion\n2-Tipo\n3-Coste\n4-Alcance\n5-Porcentaje Danio-Escudo\n");
                 scanf("%d",&parametro);
 
             }while(parametro < 1 && parametro > 5);

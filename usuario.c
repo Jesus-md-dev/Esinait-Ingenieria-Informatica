@@ -16,6 +16,8 @@ void lista_usuarios_on(usuario *u);
 
 void m_admin (usuario **u);
 
+int indice_usuario(usuario *u,char id[100])
+
 int iniciar_sesion(usuario **u,configuracion c);
 */
 void m_amigos(amigo **a,char *nick,usuario *u);
@@ -429,4 +431,13 @@ void m_admin (usuario **u){
 			}while(r2!='n');
 		}
 	}while(op!=0);
+}
+
+int indice_usuario(usuario *u,char id[100])
+{
+	int i;
+	for(i=0;i<nusuarios;i++)
+	{
+		if(strcmp(u[i].nick,id)==0) return i;
+	}
 }

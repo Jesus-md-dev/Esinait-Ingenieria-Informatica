@@ -3,7 +3,7 @@
 /*
 int njugadores_EE (usuario *u);
 
-void lobby (usuario **u,configuracion c,int indice);
+void lobby (usuario **u,configuracion c,int indice,jmapa **jm,mochila **m,objetos *o);
 */
 int op_usuario_partida(usuario *u,configuracion c);
 int njugadores_EJ (usuario *u);
@@ -15,19 +15,24 @@ void terminar_partida_jugadores(usuario **u,jmapa **jm);
 void lista_indices(int *v,int indice);
 void movimiento(jmapa **jm,int indice,configuracion c);
 
-void lobby (usuario **u,configuracion c,int indice,jmapa **jm,mochila **m)
+void lobby (usuario **u,configuracion c,int *indice,jmapa **jm,mochila **m,objetos *o)
 {
-	int op,turno=0,idob=-1,acciones=0;
+	int op,turno=0,idob=-1,acciones=0,i=-1;
 	do
 	{
 		system("cls");
-		if(strcmp((*u)[indice].estado,"EJ")==0)
+		if(strcmp((*u)[*indice].estado,"EJ")==0)
 		{
 			do
 			{
 				do
 				{
-					printf(" |%s|  Vida: %d/100  Acciones %d/%d\n\n",(*jm)[turno].id,(*u)[indice].vida,c.n_acciones-acciones,c.n_acciones);
+					i=indice_usuario((*u),(*jm)[turno].id);
+
+					printf(" |%s|  Vida: %d/100  Acciones %d/%d\n\n",(*jm)[turno].id,(*u)[(*indice)].vida,c.n_acciones-acciones,c.n_acciones);
+					printf(" Arma: ");
+					if(idob==-1) {printf("Predeterminada\n");}
+					else printf("%s",o[idob].item_ID);
 					printf(" 1.Ver/Usar Mochila\n");
 					printf(" 2.Usar Objeto/Disparar\n");
 					printf(" 3.Mover Jugador\n");
@@ -41,7 +46,7 @@ void lobby (usuario **u,configuracion c,int indice,jmapa **jm,mochila **m)
 				}while(op < 0 && op > 7);
 				switch (op)
 				{
-				case 1: usarMochila(*m,indice,*u);break;
+				case 1: idob=usarMochila(*m,*indice,*u,o);break;
 				case 2: printf("Mantenimiento\n");system("pause");break;
 				case 3: movimiento(&(*jm),turno,c);acciones++;break;
 				case 4: printf("Mantenimiento\n");system("pause");break;
@@ -59,33 +64,32 @@ void lobby (usuario **u,configuracion c,int indice,jmapa **jm,mochila **m)
 				}
 				njugando=njugadores_EJ(*u)-1;
 				
-				if(njugando==1) terminar_partida_jugadores(&(*u),&(*jm));
+				//if(njugando==1) {terminar_partida_jugadores(&(*u),&(*jm));}
 			} while (op != 0);
 		}
-		else if(strcmp((*u)[indice].estado,"GO")==0)
+		else if(strcmp((*u)[*indice].estado,"GO")==0)
 		{
 			printf("Has muerto\n");
 			printf("F\n");
 			system("pause");
-			strcpy((*u)[indice].estado,"ON");
+			strcpy((*u)[*indice].estado,"ON");
 			op=0;//Apaño
 		}
 		else
 		{
-			if(strcmp((*u)[indice].perfil,"JGD")==0)
+			if(strcmp((*u)[*indice].perfil,"JGD")==0)
 			{
 				op = op_usuario_partida(*u,c);
 			}
-			else if(strcmp((*u)[indice].perfil,"ADM")==0)
+			else if(strcmp((*u)[*indice].perfil,"ADM")==0)
 			{
 				op = op_admin_partida((*u),c);
 			}
 			switch(op)
 			{
-				case 1: strcpy((*u)[indice].estado,"EE");break;
-				case 2: strcpy((*u)[indice].estado,"ON");break;
+				case 1: strcpy((*u)[*indice].estado,"EE");break;
+				case 2: strcpy((*u)[*indice].estado,"ON");break;
 				case 3: iniciar_jugadores_partida(&(*u),&(*jm),c);break;
-				case 4: terminar_partida_jugadores(&(*u),&(*jm));break;
 			}
 		}
 	}while (op!=0);
@@ -118,7 +122,6 @@ int op_admin_partida(usuario *u,configuracion c)
 		printf(" 1.Unirse\n");
 		printf(" 2.Salir lista\n");
 		printf(" 3.Iniciar Partida\n");
-		printf(" 4.Terminar Partida\n");
 		printf(" 0.Salir\n");
 		printf("\t Opcion: ");
 		scanf("%d",&r);

@@ -65,9 +65,12 @@ void guardarficheroMochila (mochila *eMochila)
                 fprintf (fich,"%s/%s/%d\n",eMochila[i].idusu,eMochila[i].idobj,eMochila[i].unidades);     // impr en el fichero linea por linea
                 i++;
             }
+
             printf ("Se han guardado los datos correctamente.\n");
         }
+
         fclose(fich);
+
     }
 
 //Cabecera: void leerMochila (mochila *eMochila, int j, usuario *u)
@@ -102,42 +105,34 @@ int  usarMochila (mochila *eMochila, int j, usuario *u) //j es el usuario
   {
     printf ("Escribe la ID del objeto que quieres utilizar:\n");
 
-    for (i=0;i<nmochilas;i++)
-    {
-        if (strcmp(u[j].nick,eMochila[i].idusu)==0)
-        {
-            printf ("%s\n",eMochila[i].idobj); //Imprime los objetos de un usuario
-        }
-    }
-
     fflush(stdin);
     fgets(op2,10,stdin);
     fixstring(op2);
 
-    for (i=0;i<nmochilas;i++)
-    {
-            if (strcmp(op2,eMochila[i].idobj)==0) //El objeto est� en la mochila
-            {
-                cont++;
-            }
-        }
-        if (cont==0) //el objeto no esta en la mochila
-        {
-            printf ("La ID introducida no es correcta. Introduzca otra: \n");
-        } else
-        { printf ("Esta seguro de que quiere usar este objeto? s/n\n");
-        fflush(stdin);
-        scanf("%c",&op);
-        if (op=='s')
-        {
             for (i=0;i<nmochilas;i++)
             {
+                if (strcmp(op2,eMochila[i].idobj)==0 && strcmp(u[j].nick,eMochila[i].idusu)==0) //El objeto esta en la mochila de ese usuario
+                {
+                    cont++;
+                }
+            }
 
-                    if (strcmp(op2,eMochila[i].idobj)==0) //Para saber la posicion de un objeto en la mochila
+        if (cont==0) //el objeto no esta en la mochila de ese usuario
+        {
+            printf ("La ID del objeto introducida no es correcta.\n");
+        } else
+        {
+            printf ("Esta seguro de que quiere usar este objeto? s/n\n");
+            fflush(stdin);
+            scanf("%c",&op);
+            if (op=='s')
+            {
+                for (i=0;i<nmochilas;i++)
+                {
+                    if (strcmp(op2,eMochila[i].idobj)==0 && strcmp(u[j].nick,eMochila[i].idusu)==0) //Para saber la posicion de un objeto en la mochila
                     {
                         printf ("El objeto se ha seleccionado correctamente.\n");
                         posicion=i;
-                        cont++;
                     }
                 }
             }
