@@ -2,6 +2,7 @@
 #include "configuracion.h"
 #include "partida.h"
 #include "Mochila.h"
+#include "mapa.h"
 #include "tienda.h"
 #include <stdio.h>
 #include <string.h>
@@ -29,14 +30,14 @@ void menu_principal()
 	usuario *u;
 	configuracion c;
 	amigo *a;
-	jmapa *jm;
+	Elemento *jm;
 	mochila *m;
 	objetos *o;
 	o = (objetos*)malloc(0*sizeof(objetos));
 	m = (mochila*)malloc(0*sizeof(mochila));
 	u = (usuario*)malloc(0*sizeof(usuario));
 	a = (amigo*)malloc(0*sizeof(amigo));
-	jm = (jmapa*)malloc(0*sizeof(jmapa));
+	jm = (Elemento*)malloc(0*sizeof(Elemento));
 
 	cargar_objetos(&o);
 	cargar_usuarios(&u);

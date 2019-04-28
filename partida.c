@@ -3,7 +3,7 @@
 /*
 int njugadores_EE (usuario *u);
 
-void lobby (usuario **u,configuracion c,int indice,jmapa **jm,mochila **m,objetos *o);
+void lobby (usuario **u,configuracion c,int indice,Elemento **jm,mochila **m,objetos *o);
 */
 int op_usuario_partida(usuario *u,configuracion c);
 int njugadores_EJ (usuario *u);
@@ -11,12 +11,12 @@ int id_objeto(objetos *o,mochila *m,usuario *u,int indice);
 int njugadores_EE (usuario *u);
 int op_admin_partida(usuario *u,configuracion c);
 void jugadores_espera(usuario *u, configuracion c);
-void iniciar_jugadores_partida(usuario **u,jmapa **jm,configuracion c);
-void terminar_partida_jugadores(usuario **u,jmapa **jm);
-void movimiento(jmapa **jm,int indice,configuracion c);
-void usar_arma(usuario **u,jmapa *jm,mochila **m,int turno,int alcance);
+void iniciar_jugadores_partida(usuario **u,Elemento **jm,configuracion c);
+void terminar_partida_jugadores(usuario **u,Elemento **jm);
+void movimiento(Elemento **jm,int indice,configuracion c);
+void usar_arma(usuario **u,Elemento *jm,mochila **m,int turno,int alcance);
 
-void lobby (usuario **u,configuracion c,int *indice,jmapa **jm,mochila **m,objetos *o)
+void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,objetos *o)
 {
 	int op,turno=0,idob=-1,acciones=0;
 	do
@@ -28,9 +28,9 @@ void lobby (usuario **u,configuracion c,int *indice,jmapa **jm,mochila **m,objet
 			{
 				do
 				{
-					*indice=indice_usuario((*u),(*jm)[turno].id);
+					*indice=indice_usuario((*u),(*jm)[turno].nombre);
 
-					printf(" |%s|  Vida: %d/100  Acciones %d/%d\n\n",(*jm)[turno].id,(*u)[(*indice)].vida,c.n_acciones-acciones,c.n_acciones);
+					printf(" |%s|  Vida: %d/100  Acciones %d/%d\n\n",(*jm)[turno].nombre,(*u)[(*indice)].vida,c.n_acciones-acciones,c.n_acciones);
 					printf(" Arma: ");
 					if(idob==-1) {printf("Predeterminada\n\n");}
 					else printf("%s\n\n",o[idob].item_ID);
@@ -67,7 +67,7 @@ void lobby (usuario **u,configuracion c,int *indice,jmapa **jm,mochila **m,objet
 				printf("Mantenimiento\n");
 				system("pause");break;
 				case 6: 
-				printf("\n Posicion: (%d,%d)\n",(*jm)[turno].x,(*jm)[turno].y);break;
+				printf("\n Posicion: (%d,%d)\n",(*jm)[turno].posx,(*jm)[turno].posy);break;
 				case 7: 
 				acciones=c.n_acciones;break;
 				}
@@ -77,9 +77,9 @@ void lobby (usuario **u,configuracion c,int *indice,jmapa **jm,mochila **m,objet
 					idob = -1;
 					acciones = 0;
 					turno++;
-					if(turno > njugando)turno = 0;
+					if(turno > nelementos)turno = 0;
 				}
-				njugando=njugadores_EJ(*u)-1;
+				nelementos=njugadores_EJ(*u)-1;
 				
 				//if(njugando==1) {terminar_partida_jugadores(&(*u),&(*jm));}
 			} while (op != 0);
@@ -162,11 +162,11 @@ void jugadores_espera(usuario *u, configuracion c)
 	printf("\n (%d/%d) Jugadores (Minimo) unidos a la partida\n\n",njugadores_EE(u),c.min_jugadores);
 }
 
-void iniciar_jugadores_partida(usuario **u,jmapa **jm,configuracion c)
+void iniciar_jugadores_partida(usuario **u,Elemento **jm,configuracion c)
 {
 	if(njugadores_EE(*u) >= c.min_jugadores){
 		srand (time(NULL));
-		int i,aux,vindice,n=0;
+		int i,aux,vindice,n=0,x,y;
 		int *v;
 		v = (int*) malloc (n*sizeof(int));
 		for(i=0;i<nusuarios;i++)
@@ -183,20 +183,20 @@ void iniciar_jugadores_partida(usuario **u,jmapa **jm,configuracion c)
 		srand (time(NULL));
 		do
 		{
-			njugando++;
-			(*jm)=(jmapa*)realloc((*jm),njugando*sizeof(jmapa));
+			nelementos++;
+			(*jm)=(Elemento*)realloc((*jm),nelementos*sizeof(Elemento));
 			vindice = rand() % n;
-			strcpy((*jm)[njugando-1].id,(*u)[v[vindice]].nick);
-			(*jm)[njugando-1].x = 0;
-			(*jm)[njugando-1].y = 0;
+			strcpy((*jm)[nelementos-1].nombre,(*u)[v[vindice]].nick);
+			(*jm)[nelementos-1].posx = 0;
+			(*jm)[nelementos-1].posy = 0;
 			v[vindice] = v[n-1];
 			n--;
 			v = (int*) realloc (v,n*sizeof(int));	
 		}while(n>0);
 
-		for(int i=0;i<njugando;i++)
+		for(int i=0;i<nelementos;i++)
 		{
-			printf("%i %s\n",i,(*jm)[i].id);
+			printf("%i %s\n",i,(*jm)[i].nombre);
 		}
 	}
 	else
@@ -206,7 +206,7 @@ void iniciar_jugadores_partida(usuario **u,jmapa **jm,configuracion c)
 	}
 }
 
-void terminar_partida_jugadores(usuario **u,jmapa **jm)
+void terminar_partida_jugadores(usuario **u,Elemento **jm)
 {
 	int i;
 	for(i=0;i<nusuarios;i++)
@@ -242,7 +242,7 @@ int njugadores_EJ (usuario *u)
 	return n;
 }
 
-void movimiento(jmapa **jm,int indice,configuracion c)
+void movimiento(Elemento **jm,int indice,configuracion c)
 {
 	int op;
 	do
@@ -256,10 +256,10 @@ void movimiento(jmapa **jm,int indice,configuracion c)
 	} while (op < 1 && op > 4);
 	switch (op)
 	{
-	case 1: (*jm)[indice].x += c.dist_paso;break;
-	case 2: (*jm)[indice].x -= c.dist_paso;break;
-	case 3: (*jm)[indice].y -= c.dist_paso;break;
-	case 4: (*jm)[indice].y += c.dist_paso;break;
+	case 1: (*jm)[indice].posx += c.dist_paso;break;
+	case 2: (*jm)[indice].posx -= c.dist_paso;break;
+	case 3: (*jm)[indice].posy -= c.dist_paso;break;
+	case 4: (*jm)[indice].posy += c.dist_paso;break;
 	}
 }
 int id_objeto(objetos *o,mochila *m,usuario *u,int indice)
@@ -272,18 +272,18 @@ int id_objeto(objetos *o,mochila *m,usuario *u,int indice)
 	return -1;
 }
 
-void usar_arma(usuario **u,jmapa *jm,mochila **m,int turno,int alcance)
+void usar_arma(usuario **u,Elemento *jm,mochila **m,int turno,int alcance)
 {
-	int op,i,dist;
+	int op,i,r,dist;
 	char nick;
 	do{
-		for(i=0;i<njugando;i++)
+		for(i=0;i<nelementos;i++)
 		{
 			if(i!=turno)
 			{
-				dist=distancia(jm,jm[turno].id,jm[i].id);
+				dist=distancia(jm,jm[turno].nombre,jm[i].nombre);
 				if(distancia > alcance){prin(" Fuera de Rango");}
-				printf(" %s\n",jm[i].id);
+				printf(" %s\n",jm[i].nombre);
 			}
 		}
 		printf(" 1.Elegir objetivo\n");
@@ -295,36 +295,28 @@ void usar_arma(usuario **u,jmapa *jm,mochila **m,int turno,int alcance)
 	{
 		printf(" Introduce su id: ");
 		scanf("%s",&nick);
-		for(i=0;i<n;i++)
+		r=0;
+		for(i=0;i<nelementos;i++)
 		{
-			if(strcmp(nick,jm[i].id)==0)
+			if(strcmp(nick,jm[i].nombre)==0) r=1;
 		}
 	}
-
-}
-/////////////////////////////////////
-void lista_indices(int *v,int indice)
-{
-	int i=0;
-	for(i=0;i<indice;i++)
-	{
-		printf("%i ",v[i]);
-	}
-	printf("\n");
+	if(r==0) printf(" Usuario no encontrado");
+	if(r==1) printf("Pium");
 }
 
-int distancia(jmapa *jm,char *u1,char *u2)
+int distancia(Elemento *jm,char *u1,char *u2)
 {
 	int x,y,dist,i,id1,id2;
-	for(i=0;i<njugando;i++){
-		if(strcmp(jm[i].id,u1)==0) id1=i;
-		if(strcmp(jm[i].id,u2)==0) id2=i;
+	for(i=0;i<nelementos;i++){
+		if(strcmp(jm[i].nombre,u1)==0) id1=i;
+		if(strcmp(jm[i].nombre,u2)==0) id2=i;
 	}
-	x=jm[id1].x-jm[id2].x;
-	y=jm[id1].y-jm[id2].y;
+	x=jm[id1].posx-jm[id2].posx;
+	y=jm[id1].posy-jm[id2].posy;
 	printf("\n\n-----------------------------------\n\n");
-	printf("%d = %d - %d\n",x,jm[id1].x,jm[id2].x);
-	printf("%d = %d - %d\n",y,jm[id1].y,jm[id2].y);
+	printf("%d = %d - %d\n",x,jm[id1].posx,jm[id2].posx);
+	printf("%d = %d - %d\n",y,jm[id1].posy,jm[id2].posy);
 	dist=sqrt(pow(x,2)+pow(y,2));
 	printf("%d = Raiz( %d^2 + %d^2 )\n",dist,x,y);
 	return dist;
