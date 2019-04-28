@@ -20,6 +20,8 @@ typedef struct{
 
 }objetos;
 
+int nobjetos;
+
 void cargar_objetos(objetos **obj);
 void lista_objetos(objetos *obj);
 void comprar_objetos(mochila **moch,objetos *obj,usuario **usua,int iuser,configuracion c);
@@ -27,7 +29,5 @@ void registrar_objetos(objetos **obj);
 void borrar_objetos(objetos **obj);
 void modificar_objetos(objetos **obj);
 void guardar_objetos(objetos *obj);
-
-int nobjetos;
 
 #endif
