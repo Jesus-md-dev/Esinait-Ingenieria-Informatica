@@ -7,17 +7,18 @@ void lobby (usuario **u,configuracion c,int indice,jmapa **jm,mochila **m,objeto
 */
 int op_usuario_partida(usuario *u,configuracion c);
 int njugadores_EJ (usuario *u);
+int id_objeto(objetos *o,mochila *m,usuario *u,int indice);
 int njugadores_EE (usuario *u);
 int op_admin_partida(usuario *u,configuracion c);
 void jugadores_espera(usuario *u, configuracion c);
 void iniciar_jugadores_partida(usuario **u,jmapa **jm,configuracion c);
 void terminar_partida_jugadores(usuario **u,jmapa **jm);
-void lista_indices(int *v,int indice);
 void movimiento(jmapa **jm,int indice,configuracion c);
+void usar_arma(usuario **u,jmapa *jm,mochila **m,int turno,int alcance);
 
 void lobby (usuario **u,configuracion c,int *indice,jmapa **jm,mochila **m,objetos *o)
 {
-	int op,turno=0,idob=-1,acciones=0,i=-1;
+	int op,turno=0,idob=-1,acciones=0;
 	do
 	{
 		system("cls");
@@ -27,12 +28,12 @@ void lobby (usuario **u,configuracion c,int *indice,jmapa **jm,mochila **m,objet
 			{
 				do
 				{
-					i=indice_usuario((*u),(*jm)[turno].id);
+					*indice=indice_usuario((*u),(*jm)[turno].id);
 
 					printf(" |%s|  Vida: %d/100  Acciones %d/%d\n\n",(*jm)[turno].id,(*u)[(*indice)].vida,c.n_acciones-acciones,c.n_acciones);
 					printf(" Arma: ");
-					if(idob==-1) {printf("Predeterminada\n");}
-					else printf("%s",o[idob].item_ID);
+					if(idob==-1) {printf("Predeterminada\n\n");}
+					else printf("%s\n\n",o[idob].item_ID);
 					printf(" 1.Ver/Usar Mochila\n");
 					printf(" 2.Usar Objeto/Disparar\n");
 					printf(" 3.Mover Jugador\n");
@@ -46,13 +47,29 @@ void lobby (usuario **u,configuracion c,int *indice,jmapa **jm,mochila **m,objet
 				}while(op < 0 && op > 7);
 				switch (op)
 				{
-				case 1: idob=usarMochila(*m,*indice,*u,o);break;
-				case 2: printf("Mantenimiento\n");system("pause");break;
-				case 3: movimiento(&(*jm),turno,c);acciones++;break;
-				case 4: printf("Mantenimiento\n");system("pause");break;
-				case 5: printf("Mantenimiento\n");system("pause");break;
-				case 6: printf("\n Posicion: (%d,%d)\n",(*jm)[turno].x,(*jm)[turno].y);break;
-				case 7: acciones=c.n_acciones;break;
+				case 1:
+				idob=id_objeto(o,(*m),(*u),*indice);break;
+				case 2:
+				if(idob!=-1)
+				{
+					if(o[idob].alcance==0) usar_arma(&(*u),(*jm),&(*m),turno,o[idob].alcance,o[idob].porcentaje_d_e);
+					else printf("Cura/Escudo Mantenimiento \n");
+				}
+				else usar_arma(&(*u),(*jm),&(*m),turno,c.dist_fisico,5);
+				system("pause");break;
+				case 3: 
+				movimiento(&(*jm),turno,c);
+				acciones++;break;
+				case 4: 
+				printf("Mantenimiento\n");
+				system("pause");break;
+				case 5:
+				printf("Mantenimiento\n");
+				system("pause");break;
+				case 6: 
+				printf("\n Posicion: (%d,%d)\n",(*jm)[turno].x,(*jm)[turno].y);break;
+				case 7: 
+				acciones=c.n_acciones;break;
 				}
 
 				if(acciones>=c.n_acciones)
@@ -245,7 +262,46 @@ void movimiento(jmapa **jm,int indice,configuracion c)
 	case 4: (*jm)[indice].y += c.dist_paso;break;
 	}
 }
+int id_objeto(objetos *o,mochila *m,usuario *u,int indice)
+{
+	int i,id = usarMochila(m,indice,u);
+	for(i=0;i<nobjetos;i++)
+	{
+		if(strcmp(o[i].item_ID,m[id].idobj)==0) return i;
+	}
+	return -1;
+}
 
+void usar_arma(usuario **u,jmapa *jm,mochila **m,int turno,int alcance)
+{
+	int op,i,dist;
+	char nick;
+	do{
+		for(i=0;i<njugando;i++)
+		{
+			if(i!=turno)
+			{
+				dist=distancia(jm,jm[turno].id,jm[i].id);
+				if(distancia > alcance){prin(" Fuera de Rango");}
+				printf(" %s\n",jm[i].id);
+			}
+		}
+		printf(" 1.Elegir objetivo\n");
+		printf(" 0.Salir\n");
+		printf("	Opcion: ");
+		scanf("%d",&op);
+	}while(op!=0 || op!=1);
+	if(op==1)
+	{
+		printf(" Introduce su id: ");
+		scanf("%s",&nick);
+		for(i=0;i<n;i++)
+		{
+			if(strcmp(nick,jm[i].id)==0)
+		}
+	}
+
+}
 /////////////////////////////////////
 void lista_indices(int *v,int indice)
 {
@@ -255,4 +311,21 @@ void lista_indices(int *v,int indice)
 		printf("%i ",v[i]);
 	}
 	printf("\n");
+}
+
+int distancia(jmapa *jm,char *u1,char *u2)
+{
+	int x,y,dist,i,id1,id2;
+	for(i=0;i<njugando;i++){
+		if(strcmp(jm[i].id,u1)==0) id1=i;
+		if(strcmp(jm[i].id,u2)==0) id2=i;
+	}
+	x=jm[id1].x-jm[id2].x;
+	y=jm[id1].y-jm[id2].y;
+	printf("\n\n-----------------------------------\n\n");
+	printf("%d = %d - %d\n",x,jm[id1].x,jm[id2].x);
+	printf("%d = %d - %d\n",y,jm[id1].y,jm[id2].y);
+	dist=sqrt(pow(x,2)+pow(y,2));
+	printf("%d = Raiz( %d^2 + %d^2 )\n",dist,x,y);
+	return dist;
 }

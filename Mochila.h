@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stddef.h>
-#include "tienda.h"
 #include "usuario.h"
 #include "configuracion.h"
 

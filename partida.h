@@ -7,6 +7,8 @@
 #include "tienda.h"
 #include "usuario.h"
 #include "Mochila.h"
+////////////////////////
+#include <math.h>
 
 typedef struct 
 {
