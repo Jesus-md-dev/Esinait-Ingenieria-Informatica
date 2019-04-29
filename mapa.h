@@ -8,6 +8,7 @@
 #include <time.h>
 #include <string.h>
 #include "usuario.h"
+#include "tienda.h"
 //#include "tormenta.h"
 
 //MACROS

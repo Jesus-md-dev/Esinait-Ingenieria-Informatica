@@ -1,9 +1,5 @@
 #include "partida.h"
 
-/*
-
-void lobby (usuario **u,configuracion c,int indice,Elemento **jm,mochila **m,objetos *o);
-*/
 int op_usuario_partida(usuario *u,configuracion c);
 int id_objeto(objetos *o,mochila *m,usuario *u,int indice);
 int op_admin_partida(usuario *u,configuracion c);
@@ -23,14 +19,17 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 	int op,turno,idob=-1,acciones=0;
 	do
 	{
-		system("cls");
 		if(strcmp((*u)[*indice].estado,"EJ")==0)
 		{
 			do
 			{
 				do
 				{
-					while(strcmp((*jm)[turno].tipo,"Jugador")!=0) turno++;
+					while(strcmp((*jm)[turno].tipo,"Jugador")!=0) 
+					{
+						printf("%s = Jugador\n",(*jm)[turno].tipo);
+						turno++;
+					}
 					
 					*indice=indice_usuario((*u),(*jm)[turno].nombre);
 
@@ -116,7 +115,6 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 			}
 		}
 	}while (op!=0);
-	system("cls");
 }
 
 int op_usuario_partida(usuario *u,configuracion c)
@@ -130,7 +128,6 @@ int op_usuario_partida(usuario *u,configuracion c)
 		printf(" 0.Salir\n");
 		printf("\t Opcion: ");
 		scanf("%d",&r);
-		system("cls");
 	}while (r<0&&r>2);
 	return r;
 }
@@ -148,7 +145,6 @@ int op_admin_partida(usuario *u,configuracion c)
 		printf(" 0.Salir\n");
 		printf("\t Opcion: ");
 		scanf("%d",&r);
-		system("cls");
 	}while (r<0&&r>4);
 	return r;
 }
@@ -172,10 +168,10 @@ void iniciar_jugadores_partida(usuario **u,Elemento **jm,configuracion c)
 {
 	if(njugadores_EE(*u) >= c.min_jugadores){
 		int i;
-		generar_mapa(&(*jm),(&(*u)));
+		generar_mapa(&(*jm),&(*u));
 		for(int i=0;i<nelementos;i++)
 		{
-			printf("%i %s\n",i,(*jm)[i].nombre);
+			printf("%i %s|%i|%i|%s\n",i,(*jm)[i].nombre,(*jm)[i].posx,(*jm)[i].posy,(*jm)[i].tipo);
 		}
 	}
 	else

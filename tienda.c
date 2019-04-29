@@ -40,14 +40,8 @@ void cargar_objetos(objetos **obj){
             partes = strtok(NULL,delim);
             (*obj)[nobjetos-1].porcentaje_d_e = atoi(partes);
         }
-
-        printf("Fichero de objetos cargado con exito.\n");
-
     }
-
 	fclose(f);
-    system("pause");
-
 }
 
 

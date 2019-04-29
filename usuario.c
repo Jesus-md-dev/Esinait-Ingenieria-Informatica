@@ -1,25 +1,5 @@
 #include "usuario.h"
-/*
-void cargar_usuarios(usuario **u);
 
-void guardar_usuarios(usuario *u);
-
-void cargar_amigos(amigo **a);
-
-void guardar_amigos(amigo *a);
-
-void ver_perfil(usuario *u,int i);
-
-void lista_usuarios (usuario *u);
-
-void lista_usuarios_on(usuario *u);
-
-void m_admin (usuario **u);
-
-int indice_usuario(usuario *u,char id[100])
-
-int iniciar_sesion(usuario **u,configuracion c);
-*/
 void m_amigos(amigo **a,char *nick,usuario *u);
 int confirmar_usuario(usuario *u,char *user);
 void crear_usuario(usuario **u,configuracion c);
@@ -436,7 +416,7 @@ void m_admin (usuario **u){
 						
 					}
 				}
-				printf(" Continuar (s/n): \n");
+				printf(" Continuar (s/n): ");
 				scanf("%c",&r2);
 				fflush(stdin);
 			}while(r2!='n');
