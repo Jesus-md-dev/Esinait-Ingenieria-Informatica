@@ -20,7 +20,7 @@ int turno_jugador(Elemento *jm,char *nick);
 
 void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,objetos *o)
 {
-	int op,turno=0,idob=-1,acciones=0;
+	int op,turno,idob=-1,acciones=0;
 	do
 	{
 		system("cls");
@@ -30,6 +30,8 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 			{
 				do
 				{
+					while(strcmp((*jm)[turno].tipo,"Jugador")!=0) turno++;
+					
 					*indice=indice_usuario((*u),(*jm)[turno].nombre);
 
 					printf(" |%s|  Vida: %d/100  Acciones %d/%d\n\n",(*jm)[turno].nombre,(*u)[(*indice)].vida,c.n_acciones-acciones,c.n_acciones);
@@ -80,7 +82,7 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 					acciones = 0;
 					do{
 						turno++;
-					}while(strcmp((*jm)[turno].tipo,"Jugador"));
+					}while(strcmp((*jm)[turno].tipo,"Jugador")!=0);
 					if(turno > nelementos)turno = 0;
 				}
 				nelementos=njugadores_EJ(*u)-1;

@@ -20,7 +20,6 @@ int main ()
 	menu_principal();
 	system("cls");
 	return 0;
-
 }
 
 void menu_principal()

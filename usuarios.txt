@@ -1,13 +1,3 @@
-Jesus/jezus maincra/1/100/0/OFF/98990/0/0/ADM/123
-Paco/afas awr/1/100/0/OFF/100/0/0/JGD/43
-miguelaskun/miguelangel valderrama/1/100/0/OFF/100/0/0/JGD/346
-Bishueka/Josemi Aragon/1/100/0/OFF/100/0/0/JGD/623
-tuputamadre/123/1/100/0/OFF/100/0/0/JGD/123
-eren/Antonio Bladeras Alberico/1/100/0/OFF/100/0/0/ADM/123
-ale/Alejandro Magic/1/100/0/OFF/100/0/0/ADM/123
-Tatiana/Tatiana Person/1/100/0/OFF/100/0/0/JGD/AAED
-VoxEsBestPartido/Santiago Abascal/1/100/0/OFF/100/0/0/JGD/PodemosESujeto de pra
-a/a/1/100/0/OFF/240/0/0/ADM/a
-a/a/1/100/0/OFF/250/0/0/JGD/a
-b/b/1/100/0/OFF/220/0/0/ADM/b
-b/b/1/100/0/OFF/250/0/0/JGD/b
+Jesus/Jesus Marquez Delgado/1/100/0/OFF/0/0/0/ADM/123
+a/a/1/100/0/OFF/0/0/0/JGD/a
+b/b/1/100/0/OFF/0/0/0/JGD/b

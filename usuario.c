@@ -194,36 +194,47 @@ int confirmar_usuario(usuario *u,char *usuario){
 void crear_usuario(usuario **u,configuracion c)
 {
 	char cadena[60];
-	*u=(usuario* )realloc((*u),(nusuarios+1)*sizeof(usuario));
-	nusuarios++;
+	int i,op=0;
 	printf(" |Crear Usuario|\n");
 	printf(" Nick: ");
 	fgets(cadena,60,stdin);
 	fixstring(cadena);
 	fflush(stdin);
-	strcpy((*u)[nusuarios-1].nick,cadena);
+	for(i=0;i<nusuarios;i++)
+	{
+		if(strcmp(cadena,(*u)[i].nick)==0) op=-1;
+	}
+	if(op==0){
+		*u=(usuario* )realloc((*u),(nusuarios+1)*sizeof(usuario));
+		nusuarios++;
+		strcpy((*u)[nusuarios-1].nick,cadena);
+		printf(" Nombre Completo: ");
+		fgets(cadena,60,stdin);
+		fixstring(cadena);
+		fflush(stdin);
+		strcpy((*u)[nusuarios-1].nombre,cadena);
 
-	printf(" Nombre Completo: ");
-	fgets(cadena,60,stdin);
-	fixstring(cadena);
-	fflush(stdin);
-	strcpy((*u)[nusuarios-1].nombre,cadena);
+		(*u)[nusuarios-1].nivel=1;
+		(*u)[nusuarios-1].vida=100;
+		(*u)[nusuarios-1].escudo=0;
+		strcpy((*u)[nusuarios-1].estado,"OFF");
+		(*u)[nusuarios-1].dinero=c.dinero_defecto;
+		(*u)[nusuarios-1].pjugadas=0;
+		(*u)[nusuarios-1].pganadas=0;
 
-	(*u)[nusuarios-1].nivel=1;
-	(*u)[nusuarios-1].vida=100;
-	(*u)[nusuarios-1].escudo=0;
-	strcpy((*u)[nusuarios-1].estado,"OFF");
-	(*u)[nusuarios-1].dinero=c.dinero_defecto;
-	(*u)[nusuarios-1].pjugadas=0;
-	(*u)[nusuarios-1].pganadas=0;
+		strcpy((*u)[nusuarios-1].perfil,"JGD");
 
-	strcpy((*u)[nusuarios-1].perfil,"JGD");
-
-	printf(" contrasena: ");
-	fgets(cadena,60,stdin);
-	fixstring(cadena);
-	fflush(stdin);
-	strcpy((*u)[nusuarios-1].contrasenia,cadena);
+		printf(" contrasena: ");
+		fgets(cadena,60,stdin);
+		fixstring(cadena);
+		fflush(stdin);
+		strcpy((*u)[nusuarios-1].contrasenia,cadena);
+	}
+	else
+	{
+		printf(" Nick ya utilizado\n");
+		system("pause");
+	}
 }
 
 void ver_perfil(usuario *u,int i)
