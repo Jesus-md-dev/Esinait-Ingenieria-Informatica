@@ -9,14 +9,8 @@
 #include <string.h>
 #include "usuario.h"
 #include "tienda.h"
+#include "configuracion.h"
 //#include "tormenta.h"
-
-//MACROS
-#define N1 -50 //Eje x negativo del MAPA
-#define N2 50 //Eje x positivo del MAPA
-#define M1 -50 //Eje y negativo del MAPA
-#define M2 50 //Eje y positivo del MAPA
-#define R 50 //Radio del mapa
 
 //VARIABLES
 int nelementos;
@@ -31,7 +25,7 @@ typedef struct{
 
 //FUNCIONES
 
-void generar_mapa (Elemento **vector, usuario **u);//Guardar en estructura
+void generar_mapa (Elemento **vector, usuario **u,objetos *o,configuracion c);//Guardar en estructura
 void guardar_mapa(Elemento *vector);//Guardar en ficheros
 void borrar_elemento(Elemento **vector,int id);
 

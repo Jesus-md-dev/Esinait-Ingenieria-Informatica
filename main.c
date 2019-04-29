@@ -16,7 +16,7 @@ void logoutall(usuario **u);
 int opciones_general();
 
 int main ()
-{
+{	
 	menu_principal();
 	system("cls");
 	return 0;

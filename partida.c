@@ -4,7 +4,6 @@ int op_usuario_partida(usuario *u,configuracion c);
 int id_objeto(objetos *o,mochila *m,usuario *u,int indice);
 int op_admin_partida(usuario *u,configuracion c);
 void jugadores_espera(usuario *u, configuracion c);
-void iniciar_jugadores_partida(usuario **u,Elemento **jm,configuracion c);
 void terminar_partida_jugadores(usuario **u,Elemento **jm);
 void movimiento(Elemento **jm,int indice,configuracion c);
 int distancia_e(Elemento *jm,char *u1,char *u2);
@@ -111,7 +110,25 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 			{
 				case 1: strcpy((*u)[*indice].estado,"EE");break;
 				case 2: strcpy((*u)[*indice].estado,"ON");break;
-				case 3: iniciar_jugadores_partida(&(*u),&(*jm),c);break;
+				case 3: 
+				if(njugadores_EE(*u) >= c.min_jugadores)
+				{
+					generar_mapa(&(*jm),&(*u),o,c);
+					////////////////////////////////////
+					int i;
+					for(int i=0;i<nelementos;i++)
+					{
+						printf("%i %s|%s|%i|%i\n",i,(*jm)[i].nombre,(*jm)[i].tipo,(*jm)[i].posx,(*jm)[i].posy);
+					}
+					system("pause");
+					//////////////////////////////////////////
+				}
+				else
+				{ 
+					printf(" Minimo de jugadores no superado\n");
+					system("pause");
+				}
+				break;
 			}
 		}
 	}while (op!=0);
@@ -162,23 +179,6 @@ void jugadores_espera(usuario *u, configuracion c)
 		}
 	}
 	printf("\n (%d/%d) Jugadores (Minimo) unidos a la partida\n\n",njugadores_EE(u),c.min_jugadores);
-}
-
-void iniciar_jugadores_partida(usuario **u,Elemento **jm,configuracion c)
-{
-	if(njugadores_EE(*u) >= c.min_jugadores){
-		int i;
-		generar_mapa(&(*jm),&(*u));
-		for(int i=0;i<nelementos;i++)
-		{
-			printf("%i %s|%i|%i|%s\n",i,(*jm)[i].nombre,(*jm)[i].posx,(*jm)[i].posy,(*jm)[i].tipo);
-		}
-	}
-	else
-	{ 
-		printf(" Minimo de jugadores no superado\n");
-		system("pause");
-	}
 }
 
 void terminar_partida_jugadores(usuario **u,Elemento **jm)
