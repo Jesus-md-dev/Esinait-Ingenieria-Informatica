@@ -2,7 +2,6 @@
 
 //FUNCIONES
 
-void generar_mapa (Elemento **vector, usuario *u);//Guardar en estructura
 void guardar_mapa (Elemento *vector);//Guardar en ficheros
 
 //Cebecera: void aleatorio(int* x, int* y)
@@ -20,30 +19,49 @@ void aleatorio(int* x, int* y){
 //Cabecera: void generar(Elementos vector[], configuracion c, usuario u[])
 //Precondicion: Ninguna
 //Postcondicion: Guardar en vector[] los datos de cada elemento que haya en el mapa generado
-void cargar_mapa (Elemento **vector, usuario *u){
+void generar_mapa (Elemento **vector, usuario **u){
 
-	int i,j=0, njugadores, obj_id;
+	int i,njugadores,obj_id,vindice,n=0;
+	int *v;
 
-    njugadores= njugadores_EE(u);
+    njugadores= njugadores_EE((*u));
 
-	for(i=0; i<njugadores; i++){//Bucle para guardar jugadores
+    srand (time(NULL));
+
+	v = (int*) malloc (n*sizeof(int));
+    
+	for(i=0;i<nusuarios;i++)
+	{
+		if(strcmp((*u)[i].estado,"EE")==0)
+		{
+			strcpy((*u)[i].estado,"EJ");
+			n++;
+			v = (int*) realloc (v,n*sizeof(int));
+			v[n-1] = i;
+		}
+	}
+	nelementos=0;
+
+	do{//Bucle para guardar jugadores
 
 		nelementos++;
 		(*vector)= (Elemento*) realloc((*vector), nelementos*sizeof(Elemento));
 
 		strcpy((*vector)[i].tipo, "Jugador");
 
-		while(strcmp(u[j].estado, "EJ")!=0){
-			i++;
-		};
+        vindice = rand() % n;
 
-		strcpy((*vector)[i].nombre, u[j].nick);
+		strcpy((*vector)[nelementos-1].nombre,(*u)[v[vindice]].nick);
 
 		aleatorio(&(*vector)[i].posx, &(*vector)[i].posy);
 
-	}
+        v[vindice] = v[n-1];
+		n--;
+		v = (int*) realloc (v,n*sizeof(int));
 
-	for( ; i<(njugadores*3) ; i++){//Bucle para guardar objetos
+	}while(n>0);
+
+	for(i=0 ; i<(njugadores*3) ; i++){//Bucle para guardar objetos
 
         nelementos++;
         (*vector)= (Elemento*) realloc((*vector), nelementos*sizeof(Elemento));
@@ -65,6 +83,7 @@ void cargar_mapa (Elemento **vector, usuario *u){
 
         aleatorio(&(*vector)[i].posx, &(*vector)[i].posy);
 	}
+    
 }
 
 //Cabecera: void guardar_mapa (Elemento vector[])
@@ -88,4 +107,14 @@ void guardar_mapa (Elemento *vector){
 
         fclose(fp);
     }
+}
+
+void borrar_elemento(Elemento **vector,int id)
+{
+    strcpy((*vector)[id].nombre,(*vector)[nelementos-1].nombre);
+    strcpy((*vector)[id].tipo,(*vector)[nelementos-1].tipo);
+    (*vector)[id].posx = (*vector)[nelementos-1].posx;
+    (*vector)[id].posy = (*vector)[nelementos-1].posy;
+    (*vector) = (Elemento*) realloc ((*vector),nelementos-1*(sizeof(Elemento)));
+    nelementos--; 
 }

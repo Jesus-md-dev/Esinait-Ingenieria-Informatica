@@ -30,7 +30,8 @@ typedef struct{
 
 //FUNCIONES
 
-void cargar_mapa(Elemento **vector, usuario *u);//Guardar en estructura
+void generar_mapa (Elemento **vector, usuario **u);//Guardar en estructura
 void guardar_mapa(Elemento *vector);//Guardar en ficheros
+void borrar_elemento(Elemento **vector,int id);
 
 #endif

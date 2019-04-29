@@ -5,20 +5,18 @@
 void lobby (usuario **u,configuracion c,int indice,Elemento **jm,mochila **m,objetos *o);
 */
 int op_usuario_partida(usuario *u,configuracion c);
-
-int njugadores_EE (usuario *u);
 int id_objeto(objetos *o,mochila *m,usuario *u,int indice);
-
 int op_admin_partida(usuario *u,configuracion c);
 void jugadores_espera(usuario *u, configuracion c);
 void iniciar_jugadores_partida(usuario **u,Elemento **jm,configuracion c);
 void terminar_partida_jugadores(usuario **u,Elemento **jm);
 void movimiento(Elemento **jm,int indice,configuracion c);
 int distancia_e(Elemento *jm,char *u1,char *u2);
-int distancia(int x1,int y1,int x2,int y2)
+int distancia(int x1,int y1,int x2,int y2);
 void usar_arma(usuario **u,Elemento *jm,mochila **m,int turno,int alcance,int danio);
 void mostrar_jugadores_cercanos(Elemento *jm,int idm,int alcance);
-void mostrar_objetos_cercanos(Elemento *jm,int idm,configuracion c);
+void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m,usuario *u,int indice);
+int turno_jugador(Elemento *jm,char *nick);
 
 void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,objetos *o)
 {
@@ -65,11 +63,11 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 				movimiento(&(*jm),turno,c);
 				acciones++;break;
 				case 4: 
-				printf("Mantenimiento\n");
-				system("pause");break;
+				mostrar_objetos_cercanos(&(*jm),&turno,c,&(*m),(*u),*indice);
 				case 5:
-				printf("Mantenimiento\n");
-				system("pause");break;
+				if(idob!=-1){mostrar_jugadores_cercanos(*jm,turno,o[idob].alcance);}
+				else mostrar_jugadores_cercanos(*jm,turno,c.dist_fisico);
+				system("pause");
 				case 6: 
 				printf("\n Posicion: (%d,%d)\n",(*jm)[turno].posx,(*jm)[turno].posy);break;
 				case 7: 
@@ -80,7 +78,9 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 				{
 					idob = -1;
 					acciones = 0;
-					turno++;
+					do{
+						turno++;
+					}while(strcmp((*jm)[turno].tipo,"Jugador"));
 					if(turno > nelementos)turno = 0;
 				}
 				nelementos=njugadores_EJ(*u)-1;
@@ -169,34 +169,8 @@ void jugadores_espera(usuario *u, configuracion c)
 void iniciar_jugadores_partida(usuario **u,Elemento **jm,configuracion c)
 {
 	if(njugadores_EE(*u) >= c.min_jugadores){
-		srand (time(NULL));
-		int i,aux,vindice,n=0,x,y;
-		int *v;
-		v = (int*) malloc (n*sizeof(int));
-		for(i=0;i<nusuarios;i++)
-		{
-			if(strcmp((*u)[i].estado,"EE")==0)
-			{
-				strcpy((*u)[i].estado,"EJ");
-				n++;
-				v = (int*) realloc (v,n*sizeof(int));
-				v[n-1] = i;
-			}
-		}
-		srand (time(NULL));
-		do
-		{
-			nelementos++;
-			(*jm)=(Elemento*)realloc((*jm),nelementos*sizeof(Elemento));
-			vindice = rand() % n;
-			strcpy((*jm)[nelementos-1].nombre,(*u)[v[vindice]].nick);
-			(*jm)[nelementos-1].posx = 0;
-			(*jm)[nelementos-1].posy = 0;
-			v[vindice] = v[n-1];
-			n--;
-			v = (int*) realloc (v,n*sizeof(int));	
-		}while(n>0);
-
+		int i;
+		generar_mapa(&(*jm),(&(*u)));
 		for(int i=0;i<nelementos;i++)
 		{
 			printf("%i %s\n",i,(*jm)[i].nombre);
@@ -266,7 +240,7 @@ void usar_arma(usuario **u,Elemento *jm,mochila **m,int turno,int alcance,int da
 			{
 				printf("1\n");
 				system("pause");
-				dist=distancia(jm,jm[turno].nombre,jm[i].nombre);
+				dist=distancia_e(jm,jm[turno].nombre,jm[i].nombre);
 				if(dist > alcance){printf(" Fuera de Rango");}
 				printf(" %s\n",jm[i].nombre);
 			}
@@ -314,21 +288,69 @@ void mostrar_jugadores_cercanos(Elemento *jm,int idm,int alcance)
 	{
 		if(i!=idm)
 		{
-			if(distancia(jm[idm].x,jm[idm].yjm[i].x,jm[i].y)<=alcance) printf(" -%s",jm[i].nombre);
+			if(strcmp(jm[i].tipo,"Jugador")==0)
+			{
+				printf(" %i <= %i\n",distancia(jm[idm].posx,jm[idm].posy,jm[i].posx,jm[i].posy),alcance);
+				if(distancia(jm[idm].posx,jm[idm].posy,jm[i].posx,jm[i].posy) <= alcance) printf(" -%s",jm[i].nombre);
+			}
 		}
 	}
 }
 
-void mostrar_objetos_cercanos(Elemento *jm,int idm,configuracion c)
+void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m,usuario *u,int indice)
+{
+	int i,op,id=-1;
+	char *nombre;
+	do{
+		do{
+			for(i=0;i<nelementos;i++)
+			{
+				if(strcmp((*jm)[i].tipo,"Objeto")==0);
+				{
+					if(distancia((*jm)[*idm].posx,(*jm)[*idm].posy,(*jm)[i].posx,(*jm)[i].posy)<=c.dist_recoger) printf(" -%s",(*jm)[i].nombre);
+				}
+			}
+			printf(" 1.Recoger Objeto\n");
+			printf(" 0.Salir\n");
+			printf("\n Opcion: ");
+			scanf("%d",&op);
+		}while(op != 0 && op !=1);
+		if(op == 1)
+		{
+			printf(" Introduce el id del objeto: ");
+			scanf("%s",&nombre);
+			for(i=0;i<nelementos;i++)
+			{
+				if(strcmp((*jm)[i].tipo,"Objeto")==0)
+				{
+					if(strcmp(nombre,(*jm)[i].nombre)==0)
+					{ 
+						if(distancia((*jm)[*idm].posx,(*jm)[*idm].posy,(*jm)[i].posx,(*jm)[i].posy)<=c.dist_recoger) id = i;
+					}
+				}
+			}
+			if(id==-1) {printf(" El objeto no existe o esta fuera de rango");}
+			else
+			{
+				printf("Objeto (%s) recogido\n",(*jm)[i].nombre);
+				guardar_mochila(&(*m),(*jm)[i].nombre,indice,u,c);
+				borrar_elemento(&(*jm),i);
+				*idm = turno_jugador((*jm),u[indice].nick);
+
+			}
+		}
+	}while(op !=0);
+}
+
+int distancia(int x1,int y1,int x2,int y2){return sqrt(pow(x1-x2,2)+pow(y1-y2,2));}
+
+int turno_jugador(Elemento *jm,char *nick)
 {
 	int i;
 	for(i=0;i<nelementos;i++)
 	{
-		if(i!=idm)
-		{
-			if(distancia(jm[idm].x,jm[idm].yjm[i].x,jm[i].y)<=c.dist_recoger) printf(" -%s",jm[i].nombre);
-		}
+		if(strcmp(nick,jm[i].nombre)) return i;
 	}
+	printf(" Usuario no encontrado\n");
+	return -1;
 }
-
-int distancia(int x1,int y1,int x2,int y2){return sqrt(pow(x1-x2,2)+pow(y1-y2,2));}
