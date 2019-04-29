@@ -6,4 +6,8 @@ tuputamadre/123/1/100/0/OFF/100/0/0/JGD/123
 eren/Antonio Bladeras Alberico/1/100/0/OFF/100/0/0/ADM/123
 ale/Alejandro Magic/1/100/0/OFF/100/0/0/ADM/123
 Tatiana/Tatiana Person/1/100/0/OFF/100/0/0/JGD/AAED
-VoxEsBestPartido/Santiago Abascal/1/100/0/OFF/100/0/0/JGD/PodemosESujeto de pruebas
+VoxEsBestPartido/Santiago Abascal/1/100/0/OFF/100/0/0/JGD/PodemosESujeto de pra
+a/a/1/100/0/OFF/250/0/0/JGD/a
+a/a/1/100/0/OFF/250/0/0/JGD/a
+b/b/1/100/0/OFF/250/0/0/JGD/b
+b/b/1/100/0/OFF/250/0/0/JGD/b

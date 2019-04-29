@@ -52,4 +52,8 @@ void m_amigos(amigo **a,char *nick,usuario *u);
 
 int indice_usuario(usuario *u,char id[100]);
 
+int njugadores_EE (usuario *u);
+
+int njugadores_EJ (usuario *u);
+
 #endif

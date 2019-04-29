@@ -165,7 +165,7 @@ int iniciar_sesion(usuario **u,configuracion c)
 	}
 	else
 	{
-		printf(" Usuario introducido no existe\n Crear Nuevo Usuario?(s/n): \n");
+		printf(" Crear Nuevo Usuario?(s/n): \n");
 		scanf("%c",&op);
 		fflush(stdin);
 		if(op=='s')
@@ -440,4 +440,26 @@ int indice_usuario(usuario *u,char id[100])
 	{
 		if(strcmp(u[i].nick,id)==0) return i;
 	}
+}
+
+int njugadores_EE (usuario *u)
+{
+	int i;
+	int n=0;
+	for (i=0;i<nusuarios;i++)
+	{
+		if(strcmp(u[i].estado,"EE")==0) n++;
+	}
+	return n;
+}
+
+int njugadores_EJ (usuario *u)
+{
+	int i;
+	int n=0;
+	for (i=0;i<nusuarios;i++)
+	{
+		if(strcmp(u[i].estado,"EJ")==0) n++;
+	}
+	return n;
 }

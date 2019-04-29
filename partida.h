@@ -11,8 +11,6 @@
 ////////////////////////
 #include <math.h>
 
-void lobby (usuario **u,configuracion c,int *indice,elementos **jm,mochila **m,objetos *o);
-
-int njugadores_EE (usuario *u);
+void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,objetos *o);
 
 #endif
