@@ -178,7 +178,7 @@ void borrar_objetos(objetos **obj){
             *obj = (objetos*)realloc((*obj),nobjetos*sizeof(objetos));
 
             a=1;
-
+ 
         }
 
     }
