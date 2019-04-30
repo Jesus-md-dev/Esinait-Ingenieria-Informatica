@@ -429,6 +429,7 @@ int indice_usuario(usuario *u,char id[100])
 	int i;
 	for(i=0;i<nusuarios;i++)
 	{
+		printf(" %s \n",u[i].nick);
 		if(strcmp(u[i].nick,id)==0) return i;
 	}
 }

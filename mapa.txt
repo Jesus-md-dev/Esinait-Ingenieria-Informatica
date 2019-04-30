@@ -1,8 +1,0 @@
-Jugador/a/22/17
-Jugador/b/-15/25
-Objeto/FUS01/-48/11
-Objeto/FUS01/-14/-17
-Objeto/ESC01/8/12
-Objeto/PTL01/35/-7
-Objeto/ESC01/25/-1
-Objeto/PTL01/26/-36

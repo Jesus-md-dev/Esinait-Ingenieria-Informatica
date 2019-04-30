@@ -27,9 +27,7 @@ void generar_mapa (Elemento **vector, usuario **u,objetos *o,configuracion c){
 	
     njugadores= njugadores_EE((*u));
     srand (time(NULL));
-
 	v = (int*) malloc (n*sizeof(int));
-    
 	for(i=0;i<nusuarios;i++)
 	{
 		if(strcmp((*u)[i].estado,"EE")==0)
@@ -41,7 +39,6 @@ void generar_mapa (Elemento **vector, usuario **u,objetos *o,configuracion c){
 		}
 	}
 	nelementos=0;
-	
 	do{//Bucle para guardar jugadores
 		nelementos++;
 		(*vector)= (Elemento*) realloc((*vector), nelementos*sizeof(Elemento));
@@ -53,7 +50,6 @@ void generar_mapa (Elemento **vector, usuario **u,objetos *o,configuracion c){
 		n--;
 		v = (int*) realloc (v,n*sizeof(int));
 	}while(n>0);
-
 	for(i=0 ; i<(njugadores*3) ; i++){//Bucle para guardar objetos
 
         nelementos++;
@@ -67,7 +63,6 @@ void generar_mapa (Elemento **vector, usuario **u,objetos *o,configuracion c){
 
         aleatorio(&(*vector)[nelementos-1].posx, &(*vector)[nelementos-1].posy,c);
 	}
-
 }
 
 //Cabecera: void guardar_mapa (Elemento vector[])

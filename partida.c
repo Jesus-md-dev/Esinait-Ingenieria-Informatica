@@ -28,9 +28,8 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 					{
 						printf("%s = Jugador\n",(*jm)[turno].tipo);
 						turno++;
+						if(turno>=nelementos-1) turno=0;
 					}
-					
-					*indice=indice_usuario((*u),(*jm)[turno].nombre);
 
 					printf(" |%s|  Vida: %d/100  Acciones %d/%d\n\n",(*jm)[turno].nombre,(*u)[(*indice)].vida,c.n_acciones-acciones,c.n_acciones);
 					printf(" Arma: ");
@@ -81,12 +80,14 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 					acciones = 0;
 					do{
 						turno++;
+						if(turno>=nelementos-1) turno=0;
 					}while(strcmp((*jm)[turno].tipo,"Jugador")!=0);
 					if(turno > nelementos)turno = 0;
 				}
 				
 				if(njugadores_EJ(*u)==1) {terminar_partida_jugadores(&(*u),&(*jm));}
 			} while (op != 0);
+			*indice=indice_usuario((*u),(*jm)[turno].nombre);
 		}
 		else if(strcmp((*u)[*indice].estado,"GO")==0)
 		{
@@ -114,14 +115,6 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 				if(njugadores_EE(*u) >= c.min_jugadores)
 				{
 					generar_mapa(&(*jm),&(*u),o,c);
-					////////////////////////////////////
-					int i;
-					for(int i=0;i<nelementos;i++)
-					{
-						printf("%i %s|%s|%i|%i\n",i,(*jm)[i].nombre,(*jm)[i].tipo,(*jm)[i].posx,(*jm)[i].posy);
-					}
-					system("pause");
-					//////////////////////////////////////////
 				}
 				else
 				{ 
