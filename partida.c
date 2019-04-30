@@ -64,16 +64,17 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 				acciones++;break;
 				case 4: 
 				mostrar_objetos_cercanos(&(*jm),&turno,c,&(*m),(*u),*indice);
+				break;
 				case 5:
 				if(idob!=-1){mostrar_jugadores_cercanos(*jm,turno,o[idob].alcance);}
 				else mostrar_jugadores_cercanos(*jm,turno,c.dist_fisico);
 				system("pause");
+				break;
 				case 6: 
 				printf("\n Posicion: (%d,%d)\n",(*jm)[turno].posx,(*jm)[turno].posy);break;
 				case 7: 
 				acciones=c.n_acciones;break;
 				}
-
 				if(acciones>=c.n_acciones)
 				{
 					idob = -1;
@@ -83,9 +84,8 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 					}while(strcmp((*jm)[turno].tipo,"Jugador")!=0);
 					if(turno > nelementos)turno = 0;
 				}
-				nelementos=njugadores_EJ(*u)-1;
 				
-				//if(njugando==1) {terminar_partida_jugadores(&(*u),&(*jm));}
+				if(njugadores_EJ(*u)==1) {terminar_partida_jugadores(&(*u),&(*jm));}
 			} while (op != 0);
 		}
 		else if(strcmp((*u)[*indice].estado,"GO")==0)
@@ -284,12 +284,11 @@ void mostrar_jugadores_cercanos(Elemento *jm,int idm,int alcance)
 	int i;
 	for(i=0;i<nelementos;i++)
 	{
-		if(i!=idm)
+		if(strcmp(jm[i].tipo,"Jugador")==0)
 		{
-			if(strcmp(jm[i].tipo,"Jugador")==0)
+			if(i!=idm)
 			{
-				printf(" %i <= %i\n",distancia(jm[idm].posx,jm[idm].posy,jm[i].posx,jm[i].posy),alcance);
-				if(distancia(jm[idm].posx,jm[idm].posy,jm[i].posx,jm[i].posy) <= alcance) printf(" -%s",jm[i].nombre);
+				if(distancia(jm[idm].posx,jm[idm].posy,jm[i].posx,jm[i].posy) <= alcance) printf(" -%s (%i,%i)\n",jm[i].nombre,jm[i].posx,jm[i].posy);
 			}
 		}
 	}
@@ -305,7 +304,7 @@ void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m
 			{
 				if(strcmp((*jm)[i].tipo,"Objeto")==0);
 				{
-					if(distancia((*jm)[*idm].posx,(*jm)[*idm].posy,(*jm)[i].posx,(*jm)[i].posy)<=c.dist_recoger) printf(" -%s",(*jm)[i].nombre);
+					if(distancia((*jm)[*idm].posx,(*jm)[*idm].posy,(*jm)[i].posx,(*jm)[i].posy)<=c.dist_recoger) printf(" -%s (%i,%i)\n",(*jm)[i].nombre,(*jm)[i].posx,(*jm)[i].posy);
 				}
 			}
 			printf(" 1.Recoger Objeto\n");

@@ -11,23 +11,10 @@ void aleatorio(int* x, int* y,configuracion c);
 void aleatorio(int* x, int* y,configuracion c){
 	int raiz;
 	do{
-
 		*x = (rand() % ((c.radio_mapa+1)*2))-c.radio_mapa;//Aleatorio para el eje x
 		*y = (rand() % ((c.radio_mapa+1)*2))-c.radio_mapa;//Aleatorio para el eje y
-		//Confirmar que funciona
-		printf(" x = %i\n",*x);
-		printf(" y = %i\n",*y);
-		printf(" x^2 = %i\n",pow(*x,2));
-		printf(" y^2 = %i\n",pow(*y,2));
-		printf(" x^2 + y^2 = %i\n",pow(*x,2) + pow(*y,2));
 		raiz = sqrt(pow(*x,2) + pow(*y,2));
-		printf(" %i > %i",raiz,c.radio_mapa); 
-
-		if(raiz > c.radio_mapa) printf(" No\n\n");
-
 	}while(raiz > c.radio_mapa);//Mientras el modulo de las posiciones x e y sea mayor que el radio del mapa se repita ya que no se puede generar fuera
-
-	printf(" Confirmado\n\n");
 }
 
 //Cabecera: void generar(Elementos vector[], configuracion c, usuario u[])
