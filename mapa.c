@@ -87,10 +87,26 @@ void guardar_mapa (Elemento *vector){
 
 void borrar_elemento(Elemento **vector,int id)
 {
-    strcpy((*vector)[id].nombre,(*vector)[nelementos-1].nombre);
-    strcpy((*vector)[id].tipo,(*vector)[nelementos-1].tipo);
-    (*vector)[id].posx = (*vector)[nelementos-1].posx;
-    (*vector)[id].posy = (*vector)[nelementos-1].posy;
-    (*vector) = (Elemento*) realloc ((*vector),nelementos-1*(sizeof(Elemento)));
-    nelementos--; 
+	guardar_mapa(*vector);
+	if(id!=nelementos-1)
+	{
+		strcpy((*vector)[id].nombre,(*vector)[nelementos-1].nombre);
+		strcpy((*vector)[id].tipo,(*vector)[nelementos-1].tipo);
+		(*vector)[id].posx = (*vector)[nelementos-1].posx;
+		(*vector)[id].posy = (*vector)[nelementos-1].posy;
+	}
+	nelementos--; 
+	(*vector) = (Elemento*) realloc ((*vector),nelementos*(sizeof(Elemento)));
+	guardar_mapa(*vector);
+}
+
+void elementos_mapa(Elemento *e)
+{
+	printf("-----------Elementos Mapa---------\n");
+	for(int i=0;i<nelementos;i++)
+	{
+		printf("%s/%s/%i/%i\n",e[i].tipo,e[i].nombre,e[i].posx,e[i].posy);
+	}
+	system("pause");
+	printf("\n\n");
 }

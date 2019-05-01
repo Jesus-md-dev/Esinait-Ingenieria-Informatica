@@ -107,7 +107,7 @@ void comprar_objetos(mochila **moch,objetos *obj,usuario **usua,int iuser,config
 void registrar_objetos(objetos **obj){
 
     char nuevo[20];
-    int j,a=0;
+    int j,a=0,op;
 
     printf("Introduzca el ID del objeto que desea registrar: ");
     fflush(stdin);
@@ -129,13 +129,41 @@ void registrar_objetos(objetos **obj){
         *obj = (objetos*)realloc((*obj),nobjetos*sizeof(objetos));
         strcpy((*obj)[nobjetos-1].item_ID,nuevo);
 
-        printf("Introduce la descripcion del objeto: ");
-        fflush(stdin);
-        gets((*obj)[nobjetos-1].descripcion);
+        do
+        {
+            system("cls");
+            printf(" 1.Escudo");
+            printf(" 2.Distinto");
+            printf(" Descripcion del objeto: ");
+            scanf("%d",&op);
+        } while (op!=0 && op!=1);
 
-        printf("Introduce que tipo de objeto es:  ");
-        fflush(stdin);
-        gets((*obj)[nobjetos-1].tipo);
+        switch (op)
+        {
+            case 1: strcpy((*obj)[nobjetos-1].tipo,"escudo");break;
+            case 2: 
+            printf("Introduce la descripcion del objeto: ");
+            fflush(stdin);
+            gets((*obj)[nobjetos-1].descripcion);
+            break;
+        }
+     
+        do{
+            system("cls");
+            printf(" 1.Arma\n");
+            printf(" 2.Skin\n");
+            printf(" 3.Accesorio\n");
+            printf("\n Elige el tipo de objeto :");
+            fflush(stdin);
+            scanf("%d",&op);
+        }while(op < 1 && op > 3);
+
+        switch (op)
+        {
+            case 1: strcpy((*obj)[nobjetos-1].tipo,"arma");break;
+            case 2: strcpy((*obj)[nobjetos-1].tipo,"skin");break;
+            case 3: strcpy((*obj)[nobjetos-1].tipo,"accesorio");break;
+        }
 
         printf("Introduce el coste del objeto:  ");
         scanf("%d",&(*obj)[nobjetos-1].coste);
@@ -143,7 +171,7 @@ void registrar_objetos(objetos **obj){
         printf("Introduce el alcance del objeto:  ");
         scanf("%d",&(*obj)[nobjetos-1].alcance);
 
-        printf("Introduce el porcentaje de da�o si es un arma o de reposicion si es un escudo: ");
+        printf("Introduce el porcentaje de danio si es un arma o de reposicion si es un escudo: ");
         scanf("%d",&(*obj)[nobjetos-1].porcentaje_d_e);
 
         printf("Objeto registrado.\n");

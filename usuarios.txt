@@ -1,4 +1,4 @@
-Jesus/Jesus Marquez Delgado/1/100/0/OFF/0/0/0/ADM/123
-a/a/1/100/0/OFF/0/0/0/ADM/a
-b/b/1/100/0/OFF/0/0/0/ADM/b
-ppp/Poppin Party/1/100/0/OFF/250/0/0/JGD/subnormal
+Jesus/Jesus Marquez Delgado/1/100/0/OFF/999999/0/0/ADM/123
+a/a/1/85/0/OFF/999869/0/0/ADM/a
+b/b/1/95/0/OFF/998879/0/0/ADM/b
+ppp/Poppin Party/1/100/0/OFF/999999/0/0/JGD/subnormal

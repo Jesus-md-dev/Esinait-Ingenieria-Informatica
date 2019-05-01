@@ -1,3 +1,10 @@
 PTL01/pistola/arma/10/20/10
 FUS01/fusil/arma/30/35/15
 ESC01/escopeta/arma/1000/7/70
+PTL01/Pistola/arma/10/60/10
+ESC01/Escopeta/arma/30/90/30
+BLL01/Ballesta/arma/68/120/70
+BOT01/Botiquin/accesorio/50/0/50
+POC01/Pocima/accesorio/90/0/50
+VEN01/Venda/accesorio/60/0/25
+ESD01/escudo/accesorio/60/0/25

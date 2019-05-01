@@ -74,7 +74,7 @@ void cargar_amigos(amigo **a)
 	char *delim="/";
 	FILE *f;
 	namigos=0;
-	f=fopen("amigos.txt","r+");
+	f=fopen("amigos.txt","r");
 	if(f==NULL)
 	{
 		printf("No se ha podido abrir el fichero amigos.txt\n");
@@ -429,7 +429,6 @@ int indice_usuario(usuario *u,char id[100])
 	int i;
 	for(i=0;i<nusuarios;i++)
 	{
-		printf(" %s \n",u[i].nick);
 		if(strcmp(u[i].nick,id)==0) return i;
 	}
 }

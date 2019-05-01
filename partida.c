@@ -5,13 +5,14 @@ int id_objeto(objetos *o,mochila *m,usuario *u,int indice);
 int op_admin_partida(usuario *u,configuracion c);
 void jugadores_espera(usuario *u, configuracion c);
 void terminar_partida_jugadores(usuario **u,Elemento **jm);
-void movimiento(Elemento **jm,int indice,configuracion c);
+void movimiento(Elemento **jm,int indice,configuracion c,int *accion);
 int distancia_e(Elemento *jm,char *u1,char *u2);
 int distancia(int x1,int y1,int x2,int y2);
-void usar_arma(usuario **u,Elemento **jm,mochila **m,int turno,int alcance,int danio,int *ido,objetos *o);
+void usar_arma(usuario **u,Elemento **jm,mochila **m,int *turno,int alcance,int danio,int *ido,objetos *o,int *acciones);
 void mostrar_jugadores_cercanos(Elemento *jm,int idm,int alcance);
-void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m,usuario *u,int indice);
-int turno_jugador(Elemento *jm,char *nick);
+void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m,usuario *u,int indice,int *accion);
+int turno_jugador(Elemento *jm,char *nick,int indice);
+void usar_objeto (usuario **u,objetos *o,mochila **m,int ido,int indice);
 
 void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,objetos *o)
 {
@@ -29,7 +30,9 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 						turno++;
 						if(turno>=nelementos-1) turno=0;
 					}
-					printf(" |%s|  Vida: %d/100  Acciones %d/%d\n\n",(*jm)[turno].nombre,(*u)[(*indice)].vida,c.n_acciones-acciones,c.n_acciones);
+					*indice=indice_usuario((*u),(*jm)[turno].nombre);
+					printf(" |%s|  Vida: %d/100 Escudo: %d/100 \n\n",(*jm)[turno].nombre,(*u)[(*indice)].vida,(*u)[(*indice)].escudo);
+					printf(" Acciones: %d/%d\n\n",c.n_acciones-acciones,c.n_acciones);
 					printf(" Arma: ");
 					if(idob==-1) {printf("Predeterminada\n\n");}
 					else printf("%s\n\n",o[idob].item_ID);
@@ -42,6 +45,7 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 					printf(" 7.Finalizar Turno\n");
 					printf(" 0.Volver al menu principal\n");
 					printf("\n\tOpcion: ");
+					fflush(stdin);
 					scanf("%d",&op);
 				}while(op < 0 && op > 7);
 				switch (op)
@@ -50,17 +54,23 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 				idob=id_objeto(o,(*m),(*u),*indice);break;
 				case 2:
 				if(idob!=-1)
-				{
-					if(o[idob].alcance==0) printf("Cura/Escudo Mantenimiento \n");
-					else usar_arma(&(*u),&(*jm),&(*m),turno,o[idob].alcance,o[idob].porcentaje_d_e,&idob,o);
+				{ 
+					printf("Objeto\n");
+					if(strcmp(o[idob].tipo,"arma")==0) usar_arma(&(*u),&(*jm),&(*m),&turno,o[idob].alcance,o[idob].porcentaje_d_e,&idob,o,&acciones);
+					else
+					{
+						printf("Accesorio\n");
+						usar_objeto(&(*u),o,&(*m),idob,*indice);
+					}
 				}
-				else usar_arma(&(*u),&(*jm),&(*m),turno,c.dist_fisico,5,&idob,o);
-				system("pause");break;
+				else usar_arma(&(*u),&(*jm),&(*m),&turno,c.dist_fisico,5,&idob,o,&acciones);
+				system("pause");
+				break;
 				case 3: 
-				movimiento(&(*jm),turno,c);
-				acciones++;break;
+				movimiento(&(*jm),turno,c,&acciones);
+				break;
 				case 4: 
-				mostrar_objetos_cercanos(&(*jm),&turno,c,&(*m),(*u),*indice);
+				mostrar_objetos_cercanos(&(*jm),&turno,c,&(*m),(*u),*indice,&acciones);
 				break;
 				case 5:
 				if(idob!=-1){mostrar_jugadores_cercanos(*jm,turno,o[idob].alcance);}
@@ -85,7 +95,6 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 				
 				if(njugadores_EJ(*u)==1) {terminar_partida_jugadores(&(*u),&(*jm));}
 			} while (op != 0);
-			*indice=indice_usuario((*u),(*jm)[turno].nombre);
 		}
 		else if(strcmp((*u)[*indice].estado,"GO")==0)
 		{
@@ -113,9 +122,6 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 				if(njugadores_EE(*u) >= c.min_jugadores)
 				{
 					generar_mapa(&(*jm),&(*u),o,c);
-					printf("Turno: %i\n",turno);
-					printf("Jugador: %s\n",(*jm)[turno].nombre);
-					system("pause");
 				}
 				else
 				{ 
@@ -180,7 +186,11 @@ void terminar_partida_jugadores(usuario **u,Elemento **jm)
 	int i;
 	for(i=0;i<nusuarios;i++)
 	{
-		if(strcmp((*u)[i].estado,"EJ")==0) printf(" %s, has ganado");
+		if(strcmp((*u)[i].estado,"EJ")==0) 
+		{
+			printf(" %s, has ganado");
+			(*u)[i].pganadas++;
+		}
 	}
 	for (i=0;i<nusuarios;i++)
 	{
@@ -189,7 +199,7 @@ void terminar_partida_jugadores(usuario **u,Elemento **jm)
 	free(*jm);
 }
 
-void movimiento(Elemento **jm,int indice,configuracion c)
+void movimiento(Elemento **jm,int indice,configuracion c,int *accion)
 {
 	int op;
 	do
@@ -199,14 +209,28 @@ void movimiento(Elemento **jm,int indice,configuracion c)
 		printf(" 2.Abajo\n");
 		printf(" 3.Izquierda\n");
 		printf(" 4.Derecha\n");
+		printf(" 0.Salir\n");
+		printf("\n Opcion: ");
 		scanf("%d",&op);
-	} while (op < 1 && op > 4);
+	} while (op < 0 && op > 4);
 	switch (op)
 	{
-	case 1: (*jm)[indice].posx += c.dist_paso;break;
-	case 2: (*jm)[indice].posx -= c.dist_paso;break;
-	case 3: (*jm)[indice].posy -= c.dist_paso;break;
-	case 4: (*jm)[indice].posy += c.dist_paso;break;
+	case 1: 
+	(*jm)[indice].posx += c.dist_paso;
+	(*accion)++;
+	break;
+	case 2: 
+	(*jm)[indice].posx -= c.dist_paso;
+	(*accion)++;
+	break;
+	case 3: 
+	(*jm)[indice].posy -= c.dist_paso;
+	(*accion)++;
+	break;
+	case 4: 
+	(*jm)[indice].posy += c.dist_paso;
+	(*accion)++;
+	break;
 	}
 }
 int id_objeto(objetos *o,mochila *m,usuario *u,int indice)
@@ -219,12 +243,12 @@ int id_objeto(objetos *o,mochila *m,usuario *u,int indice)
 	return -1;
 }
 
-void usar_arma(usuario **u,Elemento **jm,mochila **m,int turno,int alcance,int danio,int *ido,objetos *o)
+void usar_arma(usuario **u,Elemento **jm,mochila **m,int *turno,int alcance,int danio,int *ido,objetos *o,int *accion)
 {
-	int op,i,r=0,dist,indice,cont=0,indicemapa;
+	int op,i,cant,dist,indice,indicemapa,r;
 	char nick[50];
 	do{
-		mostrar_jugadores_cercanos((*jm),turno,alcance);
+		mostrar_jugadores_cercanos((*jm),*turno,alcance);
 		printf(" 1.Elegir objetivo\n");
 		printf(" 0.Salir\n");
 		printf("	Opcion: ");
@@ -237,51 +261,42 @@ void usar_arma(usuario **u,Elemento **jm,mochila **m,int turno,int alcance,int d
 		fflush(stdin);
 		fgets(nick,50,stdin);
 		fixstring(nick);
-		printf("%s\n",nick);
 		for(i=0;i<nelementos;i++)
 		{
-			printf("Tipo: %s\n",(*jm)[i].tipo);
 			if(strcmp((*jm)[i].tipo,"Jugador")==0)
 			{
-				printf("Nombre: %s\n",(*jm)[i].nombre);
 				if(strcmp(nick,(*jm)[i].nombre)==0) r=1;
 			}
 		}
-	}
-	if(r==0) printf(" Usuario no encontrado\n");
-	if(r==1) 
-	{
-		indice=indice_usuario((*u),nick);
-		printf(" %i ->",(*u)[indice].vida);
-		(*u)[indice].vida-=danio;
-		printf(" %i\n",(*u)[indice].vida);
-		if(*ido!=-1)
+	
+		if(r==0) printf(" Usuario no encontrado\n");
+		if(r==1) 
 		{
-			r=0;
-			for(i=0;i<nmochilas;i++)
+			indice=indice_usuario((*u),nick);
+			(*u)[indice].vida-=danio;
+			(*accion)++;
+			if(*ido!=-1)
 			{
-				printf(" %s = %s\n",nick,(*jm)[turno].nombre);
-				if(strcmp(nick,(*jm)[turno].nombre)==0)
+				r=0;
+				for(i=0;i<nmochilas;i++)
 				{
-					printf(" %s = %s\n",o[*ido].item_ID,(*m)[i].idobj);
-					if(strcmp(o[*ido].item_ID,(*m)[i].idobj)==0)
-					{ 
-						if(r=0) 
-						{
-							eliminarobjeto(&(*m),i);
-							r=1;
+					if(strcmp((*jm)[*turno].nombre,(*m)[i].idusu)==0)
+					{
+						if(strcmp(o[*ido].item_ID,(*m)[i].idobj)==0)
+						{ 
+								cant=(*m)[i].unidades;
+								eliminarobjeto(&(*m),i);
 						}
-						cont++;
 					}
 				}
+				if(cant==1) *ido=-1;
 			}
-			if(cont==1) *ido=-1;
-		}
-		if((*u)[indice].vida==0)
-		{
-			strcpy((*u)[indice].estado,"GO");
-			indicemapa=turno_jugador((*jm),(*u)[indice].nick);
-			borrar_elemento(&(*jm),indicemapa);
+			if((*u)[indice].vida==0)
+			{
+				strcpy((*u)[indice].estado,"GO");
+				turno_jugador((*jm),(*u)[indice].nick,indicemapa);
+				borrar_elemento(&(*jm),indicemapa);
+			}
 		}
 	}
 }
@@ -314,15 +329,17 @@ void mostrar_jugadores_cercanos(Elemento *jm,int idm,int alcance)
 	}
 }
 
-void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m,usuario *u,int indice)
+void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m,usuario *u,int indice,int *accion)
 {
-	int i,op,id=-1;
+	int i,op,id=-1,f=0;
 	char nombre[50];
-	do{
+	printf("indice = %i\n",indice);
+	
 		do{
 			for(i=0;i<nelementos;i++)
-			{
-				if(strcmp((*jm)[i].tipo,"Objeto")==0);
+			{	
+				printf(" %s %s %i\n",(*jm)[i].tipo,(*jm)[i].nombre,strcmp((*jm)[i].tipo,"Objeto"));
+				if(strcmp((*jm)[i].tipo,"Jugador")!=0);
 				{
 					if(distancia((*jm)[*idm].posx,(*jm)[*idm].posy,(*jm)[i].posx,(*jm)[i].posy)<=c.dist_recoger) printf(" -%s (%i,%i)\n",(*jm)[i].nombre,(*jm)[i].posx,(*jm)[i].posy);
 				}
@@ -338,38 +355,93 @@ void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m
 			fflush(stdin);
 			fgets(nombre,50,stdin);
 			fixstring(nombre);
-			for(i=0;i<nelementos;i++)
+			i=0;
+			do
 			{
 				if(strcmp((*jm)[i].tipo,"Objeto")==0)
 				{
 					if(strcmp(nombre,(*jm)[i].nombre)==0)
 					{ 
-						if(distancia((*jm)[*idm].posx,(*jm)[*idm].posy,(*jm)[i].posx,(*jm)[i].posy)<=c.dist_recoger) id = i;
+						if(distancia((*jm)[*idm].posx,(*jm)[*idm].posy,(*jm)[i].posx,(*jm)[i].posy)<=c.dist_recoger) 
+						{
+							id = i;
+							f=1;
+						}
 					}
 				}
-			}
-			if(id==-1) {printf(" El objeto no existe o esta fuera de rango");}
+				i++;
+			}while(f!=1 && i < nelementos);
+			if(f!=1) {printf(" El objeto no existe o esta fuera de rango");}
 			else
 			{
-				printf("Objeto (%s) recogido\n",(*jm)[i].nombre);
-				guardar_mochila(&(*m),(*jm)[i].nombre,indice,u,c);
-				borrar_elemento(&(*jm),i);
-				*idm = turno_jugador((*jm),u[indice].nick);
-
+				printf("Objeto (%s) recogido\n",(*jm)[id].nombre);
+				(*accion)++;
+				guardar_mochila(&(*m),(*jm)[id].nombre,indice,u,c);
+				borrar_elemento(&(*jm),id);
+				turno_jugador((*jm),u[indice].nick,*idm);
 			}
 		}
-	}while(op !=0);
+
 }
 
 int distancia(int x1,int y1,int x2,int y2){return sqrt(pow(x1-x2,2)+pow(y1-y2,2));}
 
-int turno_jugador(Elemento *jm,char *nick)
+int turno_jugador(Elemento *jm,char *nick,int indice)
 {
 	int i;
-	for(i=0;i<nelementos;i++)
+	do
 	{
-		if(strcmp(nick,jm[i].nombre)) return i;
+		if(strcmp(nick,jm[i].nombre)==0) 
+		{
+			return i;
+		}
+		i++;
+	}while(i<nelementos);
+	printf("Jugador no encontrado\n");
+	return indice;
+}
+
+void usar_objeto (usuario **u,objetos *o,mochila **m,int ido,int indice)
+{
+	int r=0,i=0,cant;
+	do{
+		printf("%s = %s\n",o[ido].item_ID,(*m)[i].idobj);
+		if(strcmp(o[ido].item_ID,(*m)[i].idobj)==0) 
+		{
+			printf("%s = %s\n",(*u)[indice].nombre,(*m)[i].idusu);
+			if(strcmp((*u)[indice].nombre,(*m)[i].idusu)==0) r=1;
+			else i++;
+		}
+		else i++;
+	}while(r!=1 && i < nmochilas);
+	if(r==1)
+	{
+		if(strcmp(o[ido].descripcion,"escudo")==0)
+		{
+			printf(" Escudo %i ->",(*u)[indice].escudo);
+			(*u)[indice].escudo+=o[ido].porcentaje_d_e;
+			if((*u)[indice].escudo > 100) (*u)[indice].escudo=100;
+			printf(" %i\n",(*u)[indice].escudo);
+			
+		}
+		else
+		{
+			printf(" Vida %i ->",(*u)[indice].vida);
+			(*u)[indice].vida+=o[ido].porcentaje_d_e;
+			if((*u)[indice].vida > 100) (*u)[indice].vida=100;
+			printf(" %i\n",(*u)[indice].vida);
+		}
+		for(i=0;i<nmochilas;i++)
+		{
+			if(strcmp((*u)[indice].nombre,(*m)[i].idusu)==0)
+			{
+				if(strcmp(o[ido].item_ID,(*m)[i].idobj)==0)
+				{
+					cant=(*m)[i].unidades;
+					eliminarobjeto(&(*m),i);
+				}
+			}
+		}
+		if(cant==1) ido=-1;
 	}
-	printf(" Usuario no encontrado\n");
-	return -1;
 }
