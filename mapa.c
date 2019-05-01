@@ -2,7 +2,7 @@
 
 //FUNCIONES
 
-void guardar_mapa (Elemento *vector);//Guardar en ficheros
+void guardar_mapa (Elemento *vector,int indice);//Guardar en ficheros
 void aleatorio(int* x, int* y,configuracion c);
 
 //Cebecera: void aleatorio(int* x, int* y)
@@ -68,8 +68,8 @@ void generar_mapa (Elemento **vector, usuario **u,objetos *o,configuracion c){
 //Cabecera: void guardar_mapa (Elemento vector[])
 //Precondicion: Que el vector vector[] de Elementos este inicializado
 //Postcondicion: Imprimir en un fichero todos los datos contenidos en el vector vector[]
-void guardar_mapa (Elemento *vector){
-
+void guardar_mapa (Elemento *vector,int indice)
+{
 	FILE *fp;
 	int i;
 
@@ -79,7 +79,9 @@ void guardar_mapa (Elemento *vector){
 	}
     else{
         for(i=0; i<nelementos; i++){
-            fprintf(fp, "%s/%s/%i/%i\n",vector[i].tipo, vector[i].nombre, vector[i].posx, vector[i].posy);
+            fprintf(fp, "%s/%s/%i/%i\n",vector[indice].tipo, vector[indice].nombre, vector[indice].posx, vector[indice].posy);
+			indice++;
+			if(indice == nelementos) indice=0;  
         }
         fclose(fp);
     }
@@ -87,7 +89,6 @@ void guardar_mapa (Elemento *vector){
 
 void borrar_elemento(Elemento **vector,int id)
 {
-	guardar_mapa(*vector);
 	if(id!=nelementos-1)
 	{
 		strcpy((*vector)[id].nombre,(*vector)[nelementos-1].nombre);
@@ -97,7 +98,6 @@ void borrar_elemento(Elemento **vector,int id)
 	}
 	nelementos--; 
 	(*vector) = (Elemento*) realloc ((*vector),nelementos*(sizeof(Elemento)));
-	guardar_mapa(*vector);
 }
 
 void elementos_mapa(Elemento *e)

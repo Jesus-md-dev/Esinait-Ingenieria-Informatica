@@ -132,6 +132,7 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 			}
 		}
 	}while (op!=0);
+	guardar_mapa((*jm),turno);
 }
 
 int op_usuario_partida(usuario *u,configuracion c)
