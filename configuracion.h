@@ -17,6 +17,8 @@ typedef struct
 	int n_acciones;
 }configuracion;
 
+int turno_partida;
+
 void fixstring(char *a);
 
 void cargar_configuracion(configuracion *c);

@@ -1,8 +1,0 @@
-Jugador/b/-3/1
-Objeto/ESC01/-2/2
-Objeto/FUS01/2/-1
-Objeto/BLL01/-3/2
-Objeto/PTL01/-2/-3
-Objeto/PTL01/-1/2
-Objeto/BOT01/-1/2
-Jugador/a/-1/-28

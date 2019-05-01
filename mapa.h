@@ -28,5 +28,7 @@ typedef struct{
 void generar_mapa (Elemento **vector, usuario **u,objetos *o,configuracion c);//Guardar en estructura
 void guardar_mapa(Elemento *vector,int indice);//Guardar en ficheros
 void borrar_elemento(Elemento **vector,int id);
+void cargar_mapa(Elemento **e);
+void elementos_mapa(Elemento *e);
 
 #endif

@@ -110,3 +110,37 @@ void elementos_mapa(Elemento *e)
 	system("pause");
 	printf("\n\n");
 }
+
+void cargar_mapa(Elemento **e)
+{
+	char cadena[100];
+	char *ptr;
+	char *delim="/";
+	FILE *f;
+	nelementos=0;
+	f=fopen("mapa.txt","r");
+	if(f==NULL)
+	{
+		printf("No se ha podido abrir el fichero usuarios.txt\n");
+		system("pause");
+	}
+	else
+	{
+		while(fgets(cadena,100,f)!=NULL)
+		{
+			fixstring(cadena);
+			fflush(stdin);
+			*e=(Elemento* )realloc((*e),(nelementos+1)*sizeof(Elemento));
+			nelementos++;
+			ptr=strtok(cadena,delim);
+			strcpy((*e)[nelementos-1].tipo,ptr);
+			ptr=strtok(NULL,delim);
+			strcpy((*e)[nelementos-1].nombre,ptr);
+			ptr=strtok(NULL,delim);
+			(*e)[nelementos-1].posx=atoi(ptr);
+			ptr=strtok(NULL,delim);
+			(*e)[nelementos-1].posy=atoi(ptr);
+		}
+	}
+	fclose(f);
+}

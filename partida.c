@@ -21,6 +21,10 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 	{
 		if(strcmp((*u)[*indice].estado,"EJ")==0)
 		{
+			puts("CARGAR");
+			if(turno_partida!=-1)cargar_mapa(&(*jm));
+			else turno_partida++;
+			elementos_mapa(*jm);
 			do
 			{
 				do
@@ -95,6 +99,7 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 				
 				if(njugadores_EJ(*u)==1) {terminar_partida_jugadores(&(*u),&(*jm));}
 			} while (op != 0);
+			guardar_mapa((*jm),turno);
 		}
 		else if(strcmp((*u)[*indice].estado,"GO")==0)
 		{
@@ -122,6 +127,7 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 				if(njugadores_EE(*u) >= c.min_jugadores)
 				{
 					generar_mapa(&(*jm),&(*u),o,c);
+					turno_partida=-1;
 				}
 				else
 				{ 
@@ -132,7 +138,6 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 			}
 		}
 	}while (op!=0);
-	guardar_mapa((*jm),turno);
 }
 
 int op_usuario_partida(usuario *u,configuracion c)
