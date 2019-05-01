@@ -1,4 +1,5 @@
 #include "usuario.h"
+#include "tormenta.h"
 #include "configuracion.h"
 #include "partida.h"
 #include "Mochila.h"
@@ -32,12 +33,14 @@ void menu_principal()
 	Elemento *jm;
 	mochila *m;
 	objetos *o;
+	tormenta *t;
 	o = (objetos*)malloc(0*sizeof(objetos));
 	m = (mochila*)malloc(0*sizeof(mochila));
 	u = (usuario*)malloc(0*sizeof(usuario));
 	a = (amigo*)malloc(0*sizeof(amigo));
 	jm = (Elemento*)malloc(0*sizeof(Elemento));
-
+	t = (tormenta*)malloc(0*sizeof(tormenta));
+	cargar_tormenta(&t);
 	cargar_objetos(&o);
 	cargar_usuarios(&u);
 	cargar_configuracion(&c);
@@ -90,6 +93,7 @@ void menu_principal()
 	guardar_usuarios(u);
 	guardar_amigos(a);
 	guardarficheroMochila(m);
+	guardar_tormenta(t);
 }
 
 int opciones_jugador(usuario *u,int i)

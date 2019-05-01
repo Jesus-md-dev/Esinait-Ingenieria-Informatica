@@ -135,6 +135,9 @@ int  usarMochila (mochila *eMochila, int j, usuario *u) //j es el usuario
                         posicion=i;
                     }
                 }
+            }else
+            {
+                cont=0;
             }
         }
     }

@@ -13,7 +13,7 @@ void cargar_usuarios(usuario **u){
 	char *delim="/";
 	FILE *f;
 	nusuarios=0;
-	f=fopen("usuarios.txt","r+");
+	f=fopen("usuarios.txt","r");
 	if(f==NULL)
 	{
 		printf("No se ha podido abrir el fichero usuarios.txt\n");
@@ -58,7 +58,7 @@ void guardar_usuarios(usuario *u)
 {
 	FILE *f;
 	int i;
-	f=fopen("usuarios.txt","w+");
+	f=fopen("usuarios.txt","w");
 	for(i=0;i<nusuarios;i++)
 	{
 		fprintf(f,"%s/%s/%i/%i/%i/%s/",u[i].nick,u[i].nombre,u[i].nivel,u[i].vida,u[i].escudo,u[i].estado);
@@ -100,7 +100,7 @@ void cargar_amigos(amigo **a)
 void guardar_amigos(amigo *a)
 {
 	FILE *f;
-	f=fopen("amigos.txt","w+");
+	f=fopen("amigos.txt","w");
 	int i;
 	for(i=0;i<namigos;i++)
 	{
