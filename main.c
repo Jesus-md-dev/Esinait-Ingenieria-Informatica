@@ -1,6 +1,6 @@
 #include "usuario.h"
-#include "tormenta.h"
 #include "configuracion.h"
+#include "tormenta.h"
 #include "partida.h"
 #include "Mochila.h"
 #include "mapa.h"
@@ -77,15 +77,15 @@ void menu_principal()
 		switch(op)
 		{
 			case 1: i=iniciar_sesion(&u,c);break;
-			case 2: lobby(&u,c,&i,&jm,&m,o);break;
+			case 2: lobby(&u,c,&i,&jm,&m,o,&t);break;
 			case 3: comprar_objetos(&m,o,&u,i,c);system("pause");break;
 			case 4: ver_perfil(u,i);break;
 			case 5: m_amigos(&a,u[i].nick,u);break;
-			case 6: lista_usuarios(u);system("pause");break;
-			case 7: leerMochila(m,i,u);system("pause");break;
-			case 8: mostrar_configuracion(&c);break;
-			case 9: m_admin(&u);break;
-			case 10: logoutall(&u);break;
+			case 6: leerMochila(m,i,u);system("pause");break;
+			case 7: mostrar_configuracion(&c);break;
+			case 8: m_admin(&u);break;
+			case 9: registrar_objetos(&o);break;
+			
 		}
 	}while(opc!=0);
 	logoutall(&u);
@@ -94,6 +94,7 @@ void menu_principal()
 	guardar_amigos(a);
 	guardarficheroMochila(m);
 	guardar_tormenta(t);
+	borrar_mapa(&jm);
 }
 
 int opciones_jugador(usuario *u,int i)
@@ -109,11 +110,12 @@ int opciones_jugador(usuario *u,int i)
 		printf("  3.Comprar Objeto\n");
 		printf("  4.Ver Perfil\n");
 		printf("  5.Amigos\n");
+		printf("  6.Ver Mochila\n");
 		printf("  0.Salir del Sistema\n");
 		printf("\n\tOpcion: ");
 		scanf("%d",&op);
-	}while(op<0&&op>5);
-	return op;
+	}while(op < 0 && op > 6);
+	return op; 
 }
 
 int opciones_admin(usuario *u,int i)
@@ -129,15 +131,14 @@ int opciones_admin(usuario *u,int i)
 		printf("  3.Comprar Objeto\n");
 		printf("  4.Ver Perfil\n");
 		printf("  5.Amigos\n");
-		printf("  6.Listar Usuarios\n");
-		printf("  7.Ver Mochila\n");
-		printf("  8.Configuracion\n");
-		printf("  9.Administrador\n");
-		printf(" 10.Desloguear Usuarios\n");
+		printf("  6.Ver Mochila\n");
+		printf("  7.Configuracion\n");
+		printf("  8.Administrador\n");
+		printf("  9.Crear Objeto\n");
 		printf("  0.Salir del Sistema\n");
 		printf("\n\tOpcion: ");
 		scanf("%d",&op);
-	}while(op<0&&op>10);
+	}while(op < 0 && op > 9);
 	return op;
 }
 

@@ -6,35 +6,43 @@ int op_admin_partida(usuario *u,configuracion c);
 void jugadores_espera(usuario *u, configuracion c);
 void terminar_partida_jugadores(usuario **u,Elemento **jm);
 void movimiento(Elemento **jm,int indice,configuracion c,int *accion);
-int distancia_e(Elemento *jm,char *u1,char *u2);
-int distancia(int x1,int y1,int x2,int y2);
 void usar_arma(usuario **u,Elemento **jm,mochila **m,int *turno,int alcance,int danio,int *ido,objetos *o,int *acciones);
 void mostrar_jugadores_cercanos(Elemento *jm,int idm,int alcance);
 void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m,usuario *u,int indice,int *accion);
 int turno_jugador(Elemento *jm,char *nick,int indice);
 void usar_objeto (usuario **u,objetos *o,mochila **m,int ido,int indice);
+int estar_partida(usuario **u,Elemento *jm,int indice);
 
-void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,objetos *o)
+void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,objetos *o,tormenta **t)
 {
-	int op,turno=0,idob=-1,acciones=0;
+	int op,turno=0,idob=-1,acciones=0,cont=0,tormenta=0,aux;
+	aux=turno_partida;
 	do
 	{
-		if(strcmp((*u)[*indice].estado,"EJ")==0)
+		if(turno_partida!=-1)cargar_mapa(&(*jm));
+		else turno_partida++;
+		if(estar_partida(&(*u),*jm,*indice)==0)
 		{
-			puts("CARGAR");
-			if(turno_partida!=-1)cargar_mapa(&(*jm));
-			else turno_partida++;
-			elementos_mapa(*jm);
 			do
 			{
 				do
 				{
+					while(aux >= (*t)[tormenta].tiempo && tormenta == ntormentas-1)
+					{
+						if(aux >= (*t)[tormenta].tiempo)
+						{
+							aux = aux - (*t)[tormenta].tiempo;
+							tormenta++;
+						}
+					}
+					fuera_tormenta(*t,tormenta,&(*jm),&(*u));
 					while(strcmp((*jm)[turno].tipo,"Jugador")!=0) 
 					{
 						turno++;
 						if(turno>=nelementos-1) turno=0;
 					}
 					*indice=indice_usuario((*u),(*jm)[turno].nombre);
+					system("cls");
 					printf(" |%s|  Vida: %d/100 Escudo: %d/100 \n\n",(*jm)[turno].nombre,(*u)[(*indice)].vida,(*u)[(*indice)].escudo);
 					printf(" Acciones: %d/%d\n\n",c.n_acciones-acciones,c.n_acciones);
 					printf(" Arma: ");
@@ -54,38 +62,39 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 				}while(op < 0 && op > 7);
 				switch (op)
 				{
-				case 1:
-				idob=id_objeto(o,(*m),(*u),*indice);break;
-				case 2:
-				if(idob!=-1)
-				{ 
-					printf("Objeto\n");
-					if(strcmp(o[idob].tipo,"arma")==0) usar_arma(&(*u),&(*jm),&(*m),&turno,o[idob].alcance,o[idob].porcentaje_d_e,&idob,o,&acciones);
-					else
-					{
-						printf("Accesorio\n");
-						usar_objeto(&(*u),o,&(*m),idob,*indice);
+					case 1:
+					idob=id_objeto(o,(*m),(*u),*indice);break;
+					case 2:
+					if(idob!=-1)
+					{ 
+						printf("Objeto\n");
+						if(strcmp(o[idob].tipo,"arma")==0) usar_arma(&(*u),&(*jm),&(*m),&turno,o[idob].alcance,o[idob].porcentaje_d_e,&idob,o,&acciones);
+						else
+						{
+							printf("Accesorio\n");
+							usar_objeto(&(*u),o,&(*m),idob,*indice);
+						}
 					}
+					else usar_arma(&(*u),&(*jm),&(*m),&turno,c.dist_fisico,5,&idob,o,&acciones);
+					system("pause");
+					break;
+					case 3: 
+					movimiento(&(*jm),turno,c,&acciones);
+					break;
+					case 4: 
+					mostrar_objetos_cercanos(&(*jm),&turno,c,&(*m),(*u),*indice,&acciones);
+					break;
+					case 5:
+					if(idob!=-1){mostrar_jugadores_cercanos(*jm,turno,o[idob].alcance);}
+					else mostrar_jugadores_cercanos(*jm,turno,c.dist_fisico);
+					system("pause");
+					break;
+					case 6: 
+					printf("\n Posicion: (%d,%d)\n",(*jm)[turno].posx,(*jm)[turno].posy);system("pause");break;
+					case 7: 
+					acciones=c.n_acciones;break;
 				}
-				else usar_arma(&(*u),&(*jm),&(*m),&turno,c.dist_fisico,5,&idob,o,&acciones);
-				system("pause");
-				break;
-				case 3: 
-				movimiento(&(*jm),turno,c,&acciones);
-				break;
-				case 4: 
-				mostrar_objetos_cercanos(&(*jm),&turno,c,&(*m),(*u),*indice,&acciones);
-				break;
-				case 5:
-				if(idob!=-1){mostrar_jugadores_cercanos(*jm,turno,o[idob].alcance);}
-				else mostrar_jugadores_cercanos(*jm,turno,c.dist_fisico);
-				system("pause");
-				break;
-				case 6: 
-				printf("\n Posicion: (%d,%d)\n",(*jm)[turno].posx,(*jm)[turno].posy);system("pause");break;
-				case 7: 
-				acciones=c.n_acciones;break;
-				}
+
 				if(acciones>=c.n_acciones)
 				{
 					idob = -1;
@@ -95,9 +104,18 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 						if(turno>=nelementos-1) turno=0;
 					}while(strcmp((*jm)[turno].tipo,"Jugador")!=0);
 					if(turno > nelementos)turno = 0;
+					cont++;
+					if(n_jugadores(*jm)==cont){
+						cont=0;
+						turno_partida++;
+					}
 				}
-				
-				if(njugadores_EJ(*u)==1) {terminar_partida_jugadores(&(*u),&(*jm));}
+
+				if(n_jugadores(*jm)==1) 
+				{
+					terminar_partida_jugadores(&(*u),&(*jm));
+					op=0;
+				}
 			} while (op != 0);
 			guardar_mapa((*jm),turno);
 		}
@@ -126,13 +144,19 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 				case 3: 
 				if(njugadores_EE(*u) >= c.min_jugadores)
 				{
+					inicializar_vida_escudo(&(*u));
 					generar_mapa(&(*jm),&(*u),o,c);
+					generar_tormentas(&(*t),c);
+					for(i=0;i<nusuarios;i++)
+					{
+						(*u)[i].pjugadas++;
+					}
 					turno_partida=-1;
 				}
 				else
 				{ 
 					printf(" Minimo de jugadores no superado\n");
-					system("pause");
+					system(" pause");
 				}
 				break;
 			}
@@ -143,7 +167,8 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 int op_usuario_partida(usuario *u,configuracion c)
 {
 	int r;
-	{
+	do{
+		system("cls");
 		printf("\t ||JUGADORES ESPERA||\n\n");
 		jugadores_espera(u,c);
 		printf(" 1.Unirse\n");
@@ -192,9 +217,10 @@ void terminar_partida_jugadores(usuario **u,Elemento **jm)
 	int i;
 	for(i=0;i<nusuarios;i++)
 	{
-		if(strcmp((*u)[i].estado,"EJ")==0) 
+		if(estar_partida(&(*u),(*jm),i)==0) 
 		{
-			printf(" %s, has ganado");
+			printf(" %s, has ganado",(*u)[i].nick);
+			system("pause");
 			(*u)[i].pganadas++;
 		}
 	}
@@ -202,9 +228,9 @@ void terminar_partida_jugadores(usuario **u,Elemento **jm)
 	{
 		if(strcmp((*u)[i].estado,"EJ")==0||strcmp((*u)[i].estado,"GO")==0) strcpy((*u)[i].estado,"ON");
 	}
-	free(*jm);
+	inicializar_vida_escudo(&(*u));
+	borrar_mapa(&(*jm));
 }
-
 void movimiento(Elemento **jm,int indice,configuracion c,int *accion)
 {
 	int op;
@@ -291,33 +317,19 @@ void usar_arma(usuario **u,Elemento **jm,mochila **m,int *turno,int alcance,int 
 						if(strcmp(o[*ido].item_ID,(*m)[i].idobj)==0)
 						{ 
 								cant=(*m)[i].unidades;
-								eliminarobjeto(&(*m),i);
 						}
 					}
 				}
 				if(cant==1) *ido=-1;
 			}
-			if((*u)[indice].vida==0)
+			if((*u)[indice].vida<=0)
 			{
 				strcpy((*u)[indice].estado,"GO");
-				turno_jugador((*jm),(*u)[indice].nick,indicemapa);
 				borrar_elemento(&(*jm),indicemapa);
+				turno_jugador((*jm),(*u)[indice].nick,indicemapa);
 			}
 		}
 	}
-}
-
-int distancia_e(Elemento *jm,char *u1,char *u2)
-{
-	int x,y,dist,i,id1,id2;
-	for(i=0;i<nelementos;i++){
-		if(strcmp(jm[i].nombre,u1)==0) id1=i;
-		if(strcmp(jm[i].nombre,u2)==0) id2=i;
-	}
-	x=jm[id1].posx-jm[id2].posx;
-	y=jm[id1].posy-jm[id2].posy;
-	dist=sqrt(pow(x,2)+pow(y,2));
-	return dist;
 }
 
 void mostrar_jugadores_cercanos(Elemento *jm,int idm,int alcance)
@@ -339,7 +351,6 @@ void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m
 {
 	int i,op,id=-1,f=0;
 	char nombre[50];
-	printf("indice = %i\n",indice);
 	
 		do{
 			for(i=0;i<nelementos;i++)
@@ -371,8 +382,8 @@ void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m
 						if(distancia((*jm)[*idm].posx,(*jm)[*idm].posy,(*jm)[i].posx,(*jm)[i].posy)<=c.dist_recoger) 
 						{
 							id = i;
-							f=1;
-						}
+							f = 1;
+						} 
 					}
 				}
 				i++;
@@ -389,8 +400,6 @@ void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m
 		}
 
 }
-
-int distancia(int x1,int y1,int x2,int y2){return sqrt(pow(x1-x2,2)+pow(y1-y2,2));}
 
 int turno_jugador(Elemento *jm,char *nick,int indice)
 {
@@ -450,4 +459,18 @@ void usar_objeto (usuario **u,objetos *o,mochila **m,int ido,int indice)
 		}
 		if(cant==1) ido=-1;
 	}
+}
+
+int estar_partida(usuario **u,Elemento *jm,int indice)
+{
+	int i;
+	for(i=0;i<nelementos;i++)
+	{
+		if(strcmp((*u)[indice].nick,jm[i].nombre)==0)
+		{
+			strcpy((*u)[indice].estado,"EJ");
+			return 0;
+		}
+	}
+	return -1;
 }

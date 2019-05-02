@@ -56,4 +56,6 @@ int njugadores_EE (usuario *u);
 
 int njugadores_EJ (usuario *u);
 
+void inicializar_vida_escudo (usuario **u);
+
 #endif

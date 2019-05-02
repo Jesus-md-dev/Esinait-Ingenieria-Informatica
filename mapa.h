@@ -30,5 +30,7 @@ void guardar_mapa(Elemento *vector,int indice);//Guardar en ficheros
 void borrar_elemento(Elemento **vector,int id);
 void cargar_mapa(Elemento **e);
 void elementos_mapa(Elemento *e);
+int n_jugadores(Elemento *jm);
+void borrar_mapa(Elemento **jm);
 
 #endif

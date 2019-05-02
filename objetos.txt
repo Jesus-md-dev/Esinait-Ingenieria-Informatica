@@ -8,3 +8,4 @@ BOT01/Botiquin/accesorio/50/0/50
 POC01/Pocima/accesorio/90/0/50
 VEN01/Venda/accesorio/60/0/25
 ESD01/escudo/accesorio/60/0/25
+INS01/nuclear/arma/200/200/200

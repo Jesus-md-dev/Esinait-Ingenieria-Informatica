@@ -10,6 +10,7 @@ void aleatorio(int* x, int* y,configuracion c);
 //Postcondicion: Devuelve por referencia dos numeros aleatorios
 void aleatorio(int* x, int* y,configuracion c){
 	int raiz;
+	srand (time(NULL));
 	do{
 		*x = (rand() % ((c.radio_mapa+1)*2))-c.radio_mapa;//Aleatorio para el eje x
 		*y = (rand() % ((c.radio_mapa+1)*2))-c.radio_mapa;//Aleatorio para el eje y
@@ -143,4 +144,20 @@ void cargar_mapa(Elemento **e)
 		}
 	}
 	fclose(f);
+}
+
+int n_jugadores(Elemento *jm)
+{
+	int cont,i;
+	for(i=0;i<nelementos;i++)
+	{
+		if(strcmp(jm[i].tipo,"Jugador")==0) cont++;
+	}
+	return cont;
+}
+
+void borrar_mapa(Elemento **jm)
+{
+	nelementos=0;
+	(*jm)=(Elemento*)realloc((*jm),nelementos*sizeof(Elemento));
 }

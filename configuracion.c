@@ -23,8 +23,15 @@ void cargar_configuracion(configuracion *c){
 	f=fopen("configuracion.txt","r+");
 	if(f==NULL)
 	{
-		printf("No se ha podido abrir el fichero configuracion.txt\n");
-		system("pause");
+		(*c).radio_mapa=1200;
+		(*c).dist_recoger=5;
+		(*c).dist_fisico=10;
+		(*c).dinero_defecto=250;
+		(*c).min_jugadores=2;
+		(*c).dist_paso=5;
+		(*c).tam_mochila=7;
+		(*c).partidas_nivel=2;
+		(*c).n_acciones=5;
 	}
 	else
 	{	

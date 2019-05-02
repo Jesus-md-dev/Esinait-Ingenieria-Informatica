@@ -454,3 +454,13 @@ int njugadores_EJ (usuario *u)
 	}
 	return n;
 }
+
+void inicializar_vida_escudo (usuario **u)
+{
+	int i;
+	for(i=0;i<nusuarios;i++)
+	{
+		(*u)[i].vida=100;
+		(*u)[i].escudo=0;
+	}
+}
