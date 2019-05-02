@@ -13,6 +13,9 @@ int turno_jugador(Elemento *jm,char *nick,int indice);
 void usar_objeto (usuario **u,objetos *o,mochila **m,int ido,int indice);
 int estar_partida(usuario **u,Elemento *jm,int indice);
 
+//cabecera: void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,objetos *o,tormenta **t)
+//precondicion: recibe los vectores de estructura por referencia usuario,Elemento,mochila y tormenta y por valor objeto, la estructura configuracion y el indice por referencia del usuario
+//postcondicion: muestra el menu del lobby
 void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,objetos *o,tormenta **t)
 {
 	int op,turno=0,idob=-1,acciones=0,cont=0,tormenta=0,aux,i;
@@ -164,6 +167,9 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 	}while (op!=0);
 }
 
+//cabecera: int op_usuario_partida(usuario *u,configuracion c) 
+//precondicion: recibe el vector de estructuras usuario y la estructura configuracion
+//postcondicion: muestra las opciones del usuario en partida
 int op_usuario_partida(usuario *u,configuracion c)
 {
 	int r;
@@ -180,6 +186,9 @@ int op_usuario_partida(usuario *u,configuracion c)
 	return r;
 }
 
+//cabecera: int op_admin_partida(usuario *u,configuracion c)
+//precondicion: recibe el vector de estructuras usuario y la estructura configuracion
+//postcondicion: muestra las opciones del administrador en partida
 int op_admin_partida(usuario *u,configuracion c)
 {
 	int r;
@@ -197,6 +206,9 @@ int op_admin_partida(usuario *u,configuracion c)
 	return r;
 }
 
+//cabecera: void jugadores_espera(usuario *u, configuracion c)
+//precondicion: recibe el vector de estructuras usuario y la estructura configuracion
+//postcondicion: devuelve la lista de jugadores en espera
 void jugadores_espera(usuario *u, configuracion c)
 {
 	int i;
@@ -212,6 +224,9 @@ void jugadores_espera(usuario *u, configuracion c)
 	printf("\n (%d/%d) Jugadores (Minimo) unidos a la partida\n\n",njugadores_EE(u),c.min_jugadores);
 }
 
+//cabecera: void terminar_partida_jugadores(usuario **u,Elemento **jm)
+//precondicion: recibe los vectores de estructuras por referencia usuario y Elemento
+//postcondicion: inicializa los datos de los usuarios y del ganador y borra el mapa
 void terminar_partida_jugadores(usuario **u,Elemento **jm)
 {
 	int i;
@@ -231,6 +246,10 @@ void terminar_partida_jugadores(usuario **u,Elemento **jm)
 	inicializar_vida_escudo(&(*u));
 	borrar_mapa(&(*jm));
 }
+
+//cabecera: void movimiento(Elemento **jm,int indice,configuracion c,int *accion)
+//precondicion: recibe por referencia el vector de estructuras elemente,la estructura configuracion y los enteros indice y accion, este ultimo por referencia
+//postcondicion: mueve al jugador si asi lo requiere
 void movimiento(Elemento **jm,int indice,configuracion c,int *accion)
 {
 	int op;
@@ -265,6 +284,10 @@ void movimiento(Elemento **jm,int indice,configuracion c,int *accion)
 	break;
 	}
 }
+
+//cabecera: int id_objeto(objetos *o,mochila *m,usuario *u,int indice)
+//precondicion: recibe los vectores de estruturas objetos,mochila y usuario y el indice
+//postcondicion: devuelve el id del objeto si existe o -1 si no
 int id_objeto(objetos *o,mochila *m,usuario *u,int indice)
 {
 	int i,id = usarMochila(m,indice,u);
@@ -275,6 +298,9 @@ int id_objeto(objetos *o,mochila *m,usuario *u,int indice)
 	return -1;
 }
 
+//cabecera: void usar_arma(usuario **u,Elemento **jm,mochila **m,int *turno,int alcance,int danio,int *ido,objetos *o,int *accion)
+//precondicion: recive los vectores de estructura por referencia usuario,Elemente,mochila,por valor objetos y enteros por referencia turno, ido y accion y por valor danio y alcance
+//postcondicion: devuelve las estructuras inicializadas si el usuario usa un arma contra alguien
 void usar_arma(usuario **u,Elemento **jm,mochila **m,int *turno,int alcance,int danio,int *ido,objetos *o,int *accion)
 {
 	int op,i,cant,dist,indice,indicemapa,r;
@@ -332,6 +358,9 @@ void usar_arma(usuario **u,Elemento **jm,mochila **m,int *turno,int alcance,int 
 	}
 }
 
+//cabecera: void mostrar_jugadores_cercanos(Elemento *jm,int idm,int alcance)
+//precondicion: recibe el vector de estructuras Elemento y los enteros idm y alcance
+//postcondicion: muestra los jugadores al alcance del arma actual
 void mostrar_jugadores_cercanos(Elemento *jm,int idm,int alcance)
 {
 	int i;
@@ -347,6 +376,9 @@ void mostrar_jugadores_cercanos(Elemento *jm,int idm,int alcance)
 	}
 }
 
+//cabecera: void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m,usuario *u,int indice,int *accion)
+//precondicion: recibe los vectores de estructuras por referencia Elemento y mochila, el entero idm y accion por referencia, indice por valor y la estructura configuracion
+//postcondicion: muestra los objetos al alcance a recoger y los recoge si el usuario lo desea
 void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m,usuario *u,int indice,int *accion)
 {
 	int i,op,id=-1,f=0;
@@ -401,6 +433,9 @@ void mostrar_objetos_cercanos(Elemento **jm,int *idm,configuracion c,mochila **m
 
 }
 
+//cabecera: int turno_jugador(Elemento *jm,char *nick,int indice)
+//precondicion: recibe el vector de estructuras Elemento,la cadena nick del usuario y el indice
+//postcondicion: devuelve el turno del jugador si lo encuentra e indice si no
 int turno_jugador(Elemento *jm,char *nick,int indice)
 {
 	int i;
@@ -412,10 +447,12 @@ int turno_jugador(Elemento *jm,char *nick,int indice)
 		}
 		i++;
 	}while(i<nelementos);
-	printf("Jugador no encontrado\n");
 	return indice;
 }
 
+//cabecera: void usar_objeto (usuario **u,objetos *o,mochila **m,int ido,int indice)
+//precondicion: recibe el vector de estructuras usuario y mochila por referencia, objetos por valor, y los enteros ido e indice
+//postcondicion: usa el objeto siendo estos accesorios para curar o aumentar escudo
 void usar_objeto (usuario **u,objetos *o,mochila **m,int ido,int indice)
 {
 	int r=0,i=0,cant;
@@ -461,6 +498,9 @@ void usar_objeto (usuario **u,objetos *o,mochila **m,int ido,int indice)
 	}
 }
 
+//cabecera: int estar_partida(usuario **u,Elemento *jm,int indice)
+//precondicion: recibe el vector de estructuras por referencia usuario y por valor Elemento y el entero indice
+//postcondicion: devuelve 0 si el jugador esta en la partida y -1 si no
 int estar_partida(usuario **u,Elemento *jm,int indice)
 {
 	int i;

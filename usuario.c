@@ -7,7 +7,11 @@ int comparar_amigo(char *nick,char *nickamig,amigo *a);
 void aniadir_amigo(usuario *u,amigo **a,char *nick);
 void borrar_amigo(usuario *u,amigo **a,char *nick);
 
-void cargar_usuarios(usuario **u){
+//cabecera: void cargar_usuarios(usuario **u)
+//precondicion: recibe por referencia el vector de estructura usuario
+//postcondicion: devuelve el vector inicializado
+void cargar_usuarios(usuario **u)
+{
 	char cadena[100];
 	char *ptr;
 	char *delim="/";
@@ -54,6 +58,9 @@ void cargar_usuarios(usuario **u){
 	fclose(f);
 }
 
+//cabecera: void guardar_usuarios(usuario *u)
+//precondicion: recibe el vector de estructura usuario
+//postcondicion: guarda en un fichero la estructura
 void guardar_usuarios(usuario *u)
 {
 	FILE *f;
@@ -67,6 +74,9 @@ void guardar_usuarios(usuario *u)
 	fclose(f);
 }
 
+//cabecera: void cargar_amigos(amigo **a)
+//precondicion: recibe por referencia el vector de estructura amigo
+//postcondicion: devuelve el vector inicializado
 void cargar_amigos(amigo **a)
 {
 	char cadena[100];
@@ -97,6 +107,9 @@ void cargar_amigos(amigo **a)
 	fclose(f);
 }
 
+//cabecera: guardar_amigos(amigo *a)
+//precondicion: recibe el vector de estructura amigos
+//postcondicion: guarda en un fichero la estructura
 void guardar_amigos(amigo *a)
 {
 	FILE *f;
@@ -108,6 +121,10 @@ void guardar_amigos(amigo *a)
 	}
 	fclose(f);
 }
+
+//cabecera: int iniciar_sesion(usuario **u,configuracion c)
+//precondicion: recibe el vector de estructura por referencia usuario y la estructura configuracion
+//postcondicion: devuelve el indice del usuario
 int iniciar_sesion(usuario **u,configuracion c)
 {
 	char user[50];
@@ -157,7 +174,11 @@ int iniciar_sesion(usuario **u,configuracion c)
 	return i;
 }
 
-int confirmar_usuario(usuario *u,char *usuario){
+//cabecera: int confirmar_usuario(usuario *u,char *usuario)
+//precondicion: recibe el vector de estructura usuario y una cadena con el nick
+//postcondicion: devuelve el indice si existe y -1 si no
+int confirmar_usuario(usuario *u,char *usuario)
+{
 	int i;
 	for(i=0;i<nusuarios;i++)
 	{
@@ -170,7 +191,9 @@ int confirmar_usuario(usuario *u,char *usuario){
 	return -1;
 }
 
-
+//cabecera: void crear_usuario(usuario **u,configuracion c)
+//precondicion: recibe el vector de estructura usuario y la estructura configuracion
+//postcondicion: añade e inicializa una nueva estructura usuario
 void crear_usuario(usuario **u,configuracion c)
 {
 	char cadena[60];
@@ -217,6 +240,9 @@ void crear_usuario(usuario **u,configuracion c)
 	}
 }
 
+//cabecera: void ver_perfil(usuario *u,int i)
+//precondicion: recibe el vector de estructuras usuario y un indice
+//postcondicion: muestra los datos del usuario del indice
 void ver_perfil(usuario *u,int i)
 {
 	system("cls");
@@ -229,32 +255,9 @@ void ver_perfil(usuario *u,int i)
 	system("pause");
 }
 
-void lista_usuarios (usuario *u)
-{
-	int i;
-	system("cls");
-	printf("\t| LISTA USUARIOS |\n");
-	printf(" | NICK | NOMBRE | NIVEL | VIDA | ESCUDO | ESTADO | DINERO | P.JUG | P.GAN | PERFIL | CONTRASENIA |\n");
-	for(i = 0;i < nusuarios;i++){
-		printf(" %s - %s - %i - %i - %i - |%s| -",u[i].nick,u[i].nombre,u[i].nivel,u[i].vida,u[i].escudo,u[i].estado);
-		printf(" %i - %i - %i - %s - %s\n\n",u[i].dinero,u[i].pjugadas,u[i].pganadas,u[i].perfil,u[i].contrasenia);
-	}
-}
-
-void lista_usuarios_on(usuario *u)
-{
-	int i;
-	system("cls");
-	printf("\t| LISTA USUARIOS |\n");
-	printf(" | NICK | NOMBRE | NIVEL | VIDA | ESCUDO | ESTADO | DINERO | P.JUG | P.GAN | PERFIL | CONTRASENIA |\n");
-	for(i = 0;i < nusuarios;i++){
-		if((strcmp(u[i].estado,"OFF"))==1){
-			printf(" %s - %s - %i - %i - %i - |%s| -",u[i].nick,u[i].nombre,u[i].nivel,u[i].vida,u[i].escudo,u[i].estado);
-			printf(" %i - %i - %i - %s - %s\n\n",u[i].dinero,u[i].pjugadas,u[i].pganadas,u[i].perfil,u[i].contrasenia);
-		}
-	}
-	printf("\n");
-}
+//cabecera: void lista_amigos(amigo *a,char *nick)
+//precondicion: recibe el vector de estructuras amigo y una cadena con el nick del usuario
+//postcondicion: muestra tu lista de amigos
 
 void lista_amigos(amigo *a,char *nick)
 {
@@ -271,6 +274,9 @@ void lista_amigos(amigo *a,char *nick)
 	printf("\n");
 }
 
+//cabecera: void m_amigos(amigo **a,char *nick,usuario *u)
+//precondicion: recibe el vector de estructuras amigo, una cadena nick y el vector de estructuras de usuario
+//postcondicion: muestra el menu de amigos
 void m_amigos(amigo **a,char *nick,usuario *u)
 {
 	int op;
@@ -293,6 +299,9 @@ void m_amigos(amigo **a,char *nick,usuario *u)
 	}while(op!=0);
 }
 
+//cabecera: void aniadir_amigo(usuario *u,amigo **a,char *nick)
+//precondicion: recibe los vectores de estructuras usuario, amigo y la cadena con el nick del usuario 
+//postcondicion: aniade una estructura amigo asociada al nick del usuario
 void aniadir_amigo(usuario *u,amigo **a,char *nick)
 {
 	int i;
@@ -327,6 +336,9 @@ void aniadir_amigo(usuario *u,amigo **a,char *nick)
 	}
 }
 
+//cabecera: int comparar_amigo(char *nick,char *nickamig,amigo *a)
+//precondicion: recibe el nick del usuario, el nick del amigo y el vector de estructuras amigo
+//postcondicion: devuelve 0 si esta agregado o -1 si no
 int comparar_amigo(char *nick,char *nickamig,amigo *a)
 {
 	int i;
@@ -343,6 +355,9 @@ int comparar_amigo(char *nick,char *nickamig,amigo *a)
 	return -1;
 }
 
+//cabecera: void borrar_amigo(usuario *u,amigo **a,char *nick)
+//precondicion: recibe los vectores de estructuras usuario y por referencia amigo y la cadena nick
+//postcondicion: borra una estructura de amigo
 void borrar_amigo(usuario *u,amigo **a,char *nick)
 {
 	int i,j;
@@ -373,7 +388,11 @@ void borrar_amigo(usuario *u,amigo **a,char *nick)
 	}
 }
 
-void m_admin (usuario **u){
+//cabecera: void m_admin (usuario **u)
+//precondicion: recibe por referencia el vector de estructura usuario
+//postcondicion: ensenia el menu de promover/quitar admin
+void m_admin (usuario **u)
+{
 	int op,i;
 	char cadena[60];
 	char r1,r2;
@@ -424,6 +443,9 @@ void m_admin (usuario **u){
 	}while(op!=0);
 }
 
+//cabecera: int indice_usuario(usuario *u,char id[100])
+//precondicion: recibe el vector de estructuras usuario y la cadena id con el nick del usuario
+//postcondicion: devuelve el indice del usuario
 int indice_usuario(usuario *u,char id[100])
 {
 	int i;
@@ -433,6 +455,9 @@ int indice_usuario(usuario *u,char id[100])
 	}
 }
 
+//cabecera: int njugadores_EE (usuario *u)
+//precondicion: recibe el vector de estructuras usuario
+//postcondicion: devuelve el numero de usuarios en espera (EE)
 int njugadores_EE (usuario *u)
 {
 	int i;
@@ -444,6 +469,9 @@ int njugadores_EE (usuario *u)
 	return n;
 }
 
+//cabecera: int njugadores_EE (usuario *u)
+//precondicion: recibe el vector de estructuras usuario
+//postcondicion: devuelve el numero de usuarios en juego (EJ)
 int njugadores_EJ (usuario *u)
 {
 	int i;
@@ -455,6 +483,9 @@ int njugadores_EJ (usuario *u)
 	return n;
 }
 
+//cabecera: void inicializar_vida_escudo (usuario **u)
+//precondicion: recibe el vector de estructuras por referencia usuario
+//postcondicion: inicializa la vida a 100 y el escudo a 0 de todos los usuarios
 void inicializar_vida_escudo (usuario **u)
 {
 	int i;

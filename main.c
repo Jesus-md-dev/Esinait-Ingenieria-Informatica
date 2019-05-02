@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 void comprarobjeto(usuario *u,objetos *o,mochila **m,int indice);
 void menu_principal();
 int opciones_jugador(usuario *u,int i);
@@ -97,6 +98,9 @@ void menu_principal()
 	borrar_mapa(&jm);
 }
 
+//cabecera: int opciones_jugador(usuario *u,int i)
+//precondicion: recibe la estrcutura usuario y un indice
+//postcondicion: muestra las opciones del jugador
 int opciones_jugador(usuario *u,int i)
 {
 	int op;
@@ -118,6 +122,9 @@ int opciones_jugador(usuario *u,int i)
 	return op; 
 }
 
+//cabecera: int opciones_admin(usuario *u,int i)
+//precondicion: recibe la estrcutura usuario y un indice
+//postcondicion: muestra las opciones del admin
 int opciones_admin(usuario *u,int i)
 {
 	int op;
@@ -142,6 +149,9 @@ int opciones_admin(usuario *u,int i)
 	return op;
 }
 
+//cabecera: int opciones_general()
+//precondicion: 
+//postcondicion: muestra las opciones para todos
 int opciones_general()
 {
 	int op;
@@ -157,13 +167,4 @@ int opciones_general()
 	}while(op!=0&&op!=1);
 	return op;
 }
-////////////////////////
 
-void logoutall(usuario **u)
-{
-	int i;
-	for(i=0;i<nusuarios;i++)
-	{
-		strcpy((*u)[i].estado,"OFF");
-	}
-}
