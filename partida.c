@@ -15,7 +15,7 @@ int estar_partida(usuario **u,Elemento *jm,int indice);
 
 void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,objetos *o,tormenta **t)
 {
-	int op,turno=0,idob=-1,acciones=0,cont=0,tormenta=0,aux;
+	int op,turno=0,idob=-1,acciones=0,cont=0,tormenta=0,aux,i;
 	aux=turno_partida;
 	do
 	{
