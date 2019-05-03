@@ -300,3 +300,24 @@ void guardar_objetos(objetos *obj){
 	fclose(f);
 
 }
+
+//cabecera: void m_admin_tienda (objetos **o)
+//precondicion: recibe el vector de estructura de objetos por referencia
+//postcondicion: muestra opciones administrador de objetos
+void m_admin_tienda (objetos **o)
+{
+    int op;
+    do{
+        printf(" 1.Registrar Objeto\n");
+        printf(" 2.Borrar Objeto\n");
+        printf(" 1.Modificar Objeto\n");
+        printf("\n Opcion: ");
+        scanf("%d",&op);
+    }while(op < 0 && op > 3);
+    switch (op)
+    {
+    case 1:registrar_objetos(&(*o));break;
+    case 2:borrar_objetos(&(*o));break;
+    case 3:modificar_objetos(&(*o));break;
+    }
+}

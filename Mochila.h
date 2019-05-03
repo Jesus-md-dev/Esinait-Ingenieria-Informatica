@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stddef.h>
 #include "usuario.h"
 #include "configuracion.h"
 

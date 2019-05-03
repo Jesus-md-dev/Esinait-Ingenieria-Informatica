@@ -495,3 +495,18 @@ void inicializar_vida_escudo (usuario **u)
 		(*u)[i].escudo=0;
 	}
 }
+
+//cabecera: void lista_usuarios (usuario *u)
+//precondicion: recibe el vector de estructuras por valor usuario
+//postcondicion: muestra la lista de usuarios del sistema
+void lista_usuarios (usuario *u)
+{
+	int i;
+	system("cls");
+	printf("\t| LISTA USUARIOS |\n");
+	printf(" | NICK | NOMBRE | NIVEL | VIDA | ESCUDO | ESTADO | DINERO | P.JUG | P.GAN | PERFIL | CONTRASENIA |\n");
+	for(i = 0;i < nusuarios;i++){
+		printf(" %s - %s - %i - %i - %i - |%s| -",u[i].nick,u[i].nombre,u[i].nivel,u[i].vida,u[i].escudo,u[i].estado);
+		printf(" %i - %i - %i - %s - %s\n\n",u[i].dinero,u[i].pjugadas,u[i].pganadas,u[i].perfil,u[i].contrasenia);
+	}
+}

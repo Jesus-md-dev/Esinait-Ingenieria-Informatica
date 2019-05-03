@@ -25,6 +25,7 @@ int nobjetos;
 void cargar_objetos(objetos **obj);
 void lista_objetos(objetos *obj);
 void comprar_objetos(mochila **moch,objetos *obj,usuario **usua,int iuser,configuracion c);
+void m_admin_tienda (objetos **o);
 void registrar_objetos(objetos **obj);
 void borrar_objetos(objetos **obj);
 void modificar_objetos(objetos **obj);

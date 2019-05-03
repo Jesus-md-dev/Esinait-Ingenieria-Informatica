@@ -4,7 +4,7 @@ int op_usuario_partida(usuario *u,configuracion c);
 int id_objeto(objetos *o,mochila *m,usuario *u,int indice);
 int op_admin_partida(usuario *u,configuracion c);
 void jugadores_espera(usuario *u, configuracion c);
-void terminar_partida_jugadores(usuario **u,Elemento **jm);
+void terminar_partida_jugadores(usuario **u,Elemento **jm,configuracion c);
 void movimiento(Elemento **jm,int indice,configuracion c,int *accion);
 void usar_arma(usuario **u,Elemento **jm,mochila **m,int *turno,int alcance,int danio,int *ido,objetos *o,int *acciones);
 void mostrar_jugadores_cercanos(Elemento *jm,int idm,int alcance);
@@ -57,7 +57,8 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 					printf(" 4.Ver Objetos Cercanos\n");
 					printf(" 5.Ver Oponentes Cercanos\n");
 					printf(" 6.Ver Posicion Actual\n");
-					printf(" 7.Finalizar Turno\n");
+					printf(" 7.Ver posicion y limites de la tormenta\n");
+					printf(" 8.Finalizar Turno\n");
 					printf(" 0.Volver al menu principal\n");
 					printf("\n\tOpcion: ");
 					fflush(stdin);
@@ -95,6 +96,14 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 					case 6: 
 					printf("\n Posicion: (%d,%d)\n",(*jm)[turno].posx,(*jm)[turno].posy);system("pause");break;
 					case 7: 
+					printf(" Centro: %i/%i\n",(*t)[tormenta].x,(*t)[tormenta].y);
+					printf(" Norte: %i/%i",(*t)[tormenta].x,(*t)[tormenta].y+((*t)[tormenta].diametro/2));	
+					printf(" Sur: %i/%i",(*t)[tormenta].x,(*t)[tormenta].y-((*t)[tormenta].diametro/2));
+					printf(" Este: %i/%i",(*t)[tormenta].x+((*t)[tormenta].diametro/2),(*t)[tormenta].y);
+					printf(" Oeste: %i/%i\n",(*t)[tormenta].x-((*t)[tormenta].diametro/2),(*t)[tormenta].y);
+					system("pause");
+					break;
+					case 8: 
 					acciones=c.n_acciones;break;
 				}
 
@@ -116,7 +125,7 @@ void lobby (usuario **u,configuracion c,int *indice,Elemento **jm,mochila **m,ob
 
 				if(n_jugadores(*jm)==1) 
 				{
-					terminar_partida_jugadores(&(*u),&(*jm));
+					terminar_partida_jugadores(&(*u),&(*jm),c);
 					op=0;
 				}
 			} while (op != 0);
@@ -194,6 +203,7 @@ int op_admin_partida(usuario *u,configuracion c)
 	int r;
 	do
 	{
+		system("cls");
 		printf("||JUGADORES ESPERA||\n");
 		jugadores_espera(u,c);
 		printf(" 1.Unirse\n");
@@ -227,7 +237,7 @@ void jugadores_espera(usuario *u, configuracion c)
 //cabecera: void terminar_partida_jugadores(usuario **u,Elemento **jm)
 //precondicion: recibe los vectores de estructuras por referencia usuario y Elemento
 //postcondicion: inicializa los datos de los usuarios y del ganador y borra el mapa
-void terminar_partida_jugadores(usuario **u,Elemento **jm)
+void terminar_partida_jugadores(usuario **u,Elemento **jm,configuracion c)
 {
 	int i;
 	for(i=0;i<nusuarios;i++)
@@ -237,6 +247,7 @@ void terminar_partida_jugadores(usuario **u,Elemento **jm)
 			printf(" %s, has ganado",(*u)[i].nick);
 			system("pause");
 			(*u)[i].pganadas++;
+			if((*u)[i].pganadas==c.partidas_nivel)(*u)[i].nivel++;
 		}
 	}
 	for (i=0;i<nusuarios;i++)
@@ -457,10 +468,8 @@ void usar_objeto (usuario **u,objetos *o,mochila **m,int ido,int indice)
 {
 	int r=0,i=0,cant;
 	do{
-		printf("%s = %s\n",o[ido].item_ID,(*m)[i].idobj);
 		if(strcmp(o[ido].item_ID,(*m)[i].idobj)==0) 
 		{
-			printf("%s = %s\n",(*u)[indice].nombre,(*m)[i].idusu);
 			if(strcmp((*u)[indice].nombre,(*m)[i].idusu)==0) r=1;
 			else i++;
 		}

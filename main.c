@@ -85,7 +85,7 @@ void menu_principal()
 			case 6: leerMochila(m,i,u);system("pause");break;
 			case 7: mostrar_configuracion(&c);break;
 			case 8: m_admin(&u);break;
-			case 9: registrar_objetos(&o);break;
+			case 9: m_admin_tienda(&o);break;
 			
 		}
 	}while(opc!=0);
@@ -141,7 +141,7 @@ int opciones_admin(usuario *u,int i)
 		printf("  6.Ver Mochila\n");
 		printf("  7.Configuracion\n");
 		printf("  8.Administrador\n");
-		printf("  9.Crear Objeto\n");
+		printf("  9.Menu Admin Objetos\n");
 		printf("  0.Salir del Sistema\n");
 		printf("\n\tOpcion: ");
 		scanf("%d",&op);
@@ -168,3 +168,11 @@ int opciones_general()
 	return op;
 }
 
+void logoutall(usuario **u)
+{
+	int i;
+	for(i=0;i<nusuarios;i++)
+	{
+		strcpy((*u)[i].estado,"OFF");
+	}
+}

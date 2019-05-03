@@ -76,7 +76,6 @@ void guardar_mapa (Elemento *vector,int indice)
 
 	if((fp= fopen("mapa.txt","w+"))==NULL){
 		printf("No se ha podido crear mapa.txt\n");
-		exit(1);
 	}
     else{
         for(i=0; i<nelementos; i++){
@@ -120,28 +119,20 @@ void cargar_mapa(Elemento **e)
 	FILE *f;
 	nelementos=0;
 	f=fopen("mapa.txt","r");
-	if(f==NULL)
+	while(fgets(cadena,100,f)!=NULL)
 	{
-		printf("No se ha podido abrir el fichero usuarios.txt\n");
-		system("pause");
-	}
-	else
-	{
-		while(fgets(cadena,100,f)!=NULL)
-		{
-			fixstring(cadena);
-			fflush(stdin);
-			*e=(Elemento* )realloc((*e),(nelementos+1)*sizeof(Elemento));
-			nelementos++;
-			ptr=strtok(cadena,delim);
-			strcpy((*e)[nelementos-1].tipo,ptr);
-			ptr=strtok(NULL,delim);
-			strcpy((*e)[nelementos-1].nombre,ptr);
-			ptr=strtok(NULL,delim);
-			(*e)[nelementos-1].posx=atoi(ptr);
-			ptr=strtok(NULL,delim);
-			(*e)[nelementos-1].posy=atoi(ptr);
-		}
+		fixstring(cadena);
+		fflush(stdin);
+		*e=(Elemento* )realloc((*e),(nelementos+1)*sizeof(Elemento));
+		nelementos++;
+		ptr=strtok(cadena,delim);
+		strcpy((*e)[nelementos-1].tipo,ptr);
+		ptr=strtok(NULL,delim);
+		strcpy((*e)[nelementos-1].nombre,ptr);
+		ptr=strtok(NULL,delim);
+		(*e)[nelementos-1].posx=atoi(ptr);
+		ptr=strtok(NULL,delim);
+		(*e)[nelementos-1].posy=atoi(ptr);
 	}
 	fclose(f);
 }
